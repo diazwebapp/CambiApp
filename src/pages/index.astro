@@ -14,7 +14,7 @@ const api = "https://ve.dolarapi.com/v1/dolares";
 let cachedTasas: Tasa[] | null = null;
 
 const getTasas = async (): Promise<Tasa[]> => {
-  if (cachedTasas) return cachedTasas;
+  //if (cachedTasas) return cachedTasas;
 
   try {
     const response = await fetch(api, {
@@ -37,7 +37,7 @@ const getTasas = async (): Promise<Tasa[]> => {
           : item.promedio,
     }));
 
-    cachedTasas = tasasConPromedio;
+    //cachedTasas = tasasConPromedio;
     return tasasConPromedio;
   } catch (error) {
     console.error("Error fetching tasas:", error);
