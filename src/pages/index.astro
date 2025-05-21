@@ -1,199 +1,418 @@
 ---
-import Layout from "../layouts/Layout.astro"
+import Layout from "../layouts/Layout.astro";
 
-interface Tasa {
-  nombre: string;
-  compra?: number;
-  venta?: number;
-  promedio?: number;
-  fechaActualizacion?: string;
-}
-
-const api = "https://ve.dolarapi.com/v1/dolares";
-// Función con caché simple para evitar múltiples fetches
-let cachedTasas: Tasa[] | null = null;
-
-const getTasas = async (): Promise<Tasa[]> => {
-  //if (cachedTasas) return cachedTasas;
-
-  try {
-    const response = await fetch(api, {
-      headers: {
-        "Cache-Control": "max-age=300", // Cache de 5 minutos
-      },
-    });
-
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-    const data: Tasa[] = await response.json();
-
-    const promedio = calcularNuevoPromedio(data);
-    const tasasConPromedio = data.map((item) => ({
-      ...item,
-      nombre: item.nombre === "Bitcoin" ? "Promedio" : item.nombre,
-      promedio:
-        item.nombre === "Bitcoin"
-          ? parseFloat(promedio.toFixed(2))
-          : item.promedio,
-    }));
-
-    //cachedTasas = tasasConPromedio;
-    return tasasConPromedio;
-  } catch (error) {
-    console.error("Error fetching tasas:", error);
-    return [];
-  }
-};
-
-function calcularNuevoPromedio(tasas: Tasa[]): number {
-  const tasasValidas = tasas.filter(
-    (t) => t.nombre !== "Bitcoin" && typeof t.promedio === "number",
-  );
-
-  if (tasasValidas.length === 0) return 0;
-
-  const suma = tasasValidas.reduce((acc, t) => acc + (t.promedio || 0), 0);
-  return suma / tasasValidas.length;
-}
-
-const tasas = await getTasas();
+const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
 ---
 
-<Layout title="Home"> 
-<div class="banner-app">
-    <span class="currency-symbol">$</span>
-    <input
-      id="clientAmount"
-      type="number"
-      step="0.01"
-      value="1"
-      placeholder="20"
-      min="0"
-    />
-</div>
+<Layout title="Calculadora">
+  <div class="calcApp">
+    <div id="typeCurrency">
+      <p id="typeConversionInfo">Dólares a Bolívares</p>
+      <label>
+        <input type="radio" name="currency" value="usd" checked />
+        <p class="currency-label">USD</p>
+      </label>
+      <label>
+        <input type="radio" name="currency" value="ves" />
+        <p class="currency-label">VES</p>
+      </label>
+    </div>
+    
+    <div class="containerAmountInput">
+      <p style="display: block; width:100%;">Monto</p>
+      <input type="number" name="amountInput" id="amountInput" step="0.01" value="1" placeholder="15">
+      <button id="btnToggleCurrency" data-to="ves">USD</button>
+      <button>$10</button> <button>$15</button> <button>$20</button> <button>$50</button> <button>$100</button>
+    </div>
 
-<table class="compact-table">
-  <thead>
-    <tr>
-      <th>Monitor</th>
-      <th>Precio</th>
-      <th>Compartir</th>
-    </tr>
-  </thead>
-  <tbody>
-    {
-      tasas.map((tasa) => (
-        <tr id={tasa.nombre}>
-          <td>{tasa.nombre}</td>
-          <td class="price-value" data-original={tasa.promedio}>
-            <b>{tasa.promedio}</b>
-          </td>
-          <td>
-            <svg
-              class="share-icon"
-              fill="#fff"
-              height="24px"
-              width="24px"
-              viewBox="0 0 490 490"
-            >
-              <path d="M245,490c135.31,0,245-109.69,245-245C490,109.69,380.31,0,245,0S0,109.69,0,245C0,380.31,109.69,490,245,490z M245,30.625 c118.207,0,214.375,96.168,214.375,214.375S363.207,459.375,245,459.375S30.625,363.207,30.625,245S126.793,30.625,245,30.625z" />
-              <path d="M137.499,304.69c15.674,0,29.948-6.083,40.611-16l78.128,36.678c-0.583,3.341-0.904,6.771-0.904,10.276 c0,32.913,26.782,59.695,59.695,59.695c32.913,0,59.695-26.782,59.695-59.695c0-32.913-26.782-59.695-59.695-59.695 c-18.454,0-34.978,8.422-45.937,21.621l-74.543-34.995c1.717-5.561,2.646-11.464,2.646-17.581c0-4.942-0.615-9.741-1.753-14.337 l75.93-35.646c10.906,11.704,26.437,19.043,43.657,19.043c32.913,0,59.695-26.782,59.695-59.695 c0-32.913-26.782-59.695-59.695-59.695c-32.913,0-59.695,26.782-59.695,59.695c0,4.681,0.559,9.232,1.583,13.606l-76.295,35.817 c-10.876-11.376-26.181-18.484-43.123-18.484c-32.913,0-59.695,26.782-59.695,59.695S104.586,304.69,137.499,304.69z M315.028,306.574c16.03,0,29.07,13.04,29.07,29.07c0,16.03-13.04,29.07-29.07,29.07c-16.03,0-29.07-13.04-29.07-29.07 C285.958,319.614,298.998,306.574,315.028,306.574z M315.028,125.291c16.03,0,29.07,13.039,29.07,29.07 c0,16.03-13.04,29.07-29.07,29.07c-16.03,0,29.07-13.04,29.07-29.07C285.958,138.331,298.998,125.291,315.028,125.291z M137.499,215.925c16.03,0,29.07,13.04,29.07,29.07s-13.039,29.07-29.07,29.07s-29.07-13.04-29.07-29.07 S121.468,215.925,137.499,215.925z" />
-            </svg>
-          </td>
-        </tr>
-      ))
-    }
-  </tbody>
-</table>
+    <div class="tasas">
+      <strong>Tasa a utilizar</strong>
+      <ul class="rowTasas">
+        <li>BCV (<span class="tasa">0</span>)</li>
+        <li>Paralelo (<span class="tasa">0</span>)</li>
+        <li>Promedio (<span class="tasa">0</span>)</li>
+      </ul>
+      <small id="lastUpdate" style="display:block; text-align:right; color:#666;"></small>
+    </div>
+
+    <div class="resultado">
+      <small>Resultado</small>
+      <strong id="resultValue">0</strong>
+    </div>
+  </div>
 </Layout>
 
 <style>
-  /* Estilos base para la tabla */
-  .compact-table {
-    border-collapse: collapse;
-    width: min-content;
-    margin: auto;
-  }
+  .calcApp {
+  max-width: 500px;
+  min-width: 250px;
+  margin: auto;
+  padding: 15px;
+}
 
-  .compact-table th,
-  .compact-table td {
-    padding: 3px;
-    text-transform: uppercase;
-    border-bottom: 1px solid #e2e8f0;
-    font-size: 1.4rem;
-  }
+.containerAmountInput {
+  position: relative;
+  margin-bottom: 20px;
+}
 
-  .compact-table td {
-    font-size: 0.9rem;
-    opacity: 0.8;
-  }
+.containerAmountInput input,
+.containerAmountInput button:not(#btnToggleCurrency) {
+  border: 1px solid var(--color-borders);
+  border-radius: 5px;
+  padding: 10px;
+}
 
-  /* Estilos específicos para celdas */
+.containerAmountInput input {
+  width: 100%;
+  padding-right: 51px;
+  border-radius: 8px;
+}
 
-  .compact-table td:last-child, .compact-table th:last-child {
-    text-align: end;
-  }
+.containerAmountInput #btnToggleCurrency {
+  position: absolute;
+  right: 1.5px;
+  top: 26px;
+  width: 50px;
+  height: calc(100% - 3px);
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--color-borders);
+  border-radius: 0 7px 7px 0;
+  cursor: pointer;
+}
 
-  .compact-table tr:hover td {
-    background-color: #2e2e2e;
-  }
+.containerAmountInput button:not(#btnToggleCurrency) {
+  background: var(--bg-cards);
+  margin: 5px 5px 0 0;
+  cursor: pointer;
+}
 
-  /* Estilos para el input */
-  .currency-symbol {
-    font-size: 2.5rem;
-    font-weight: bold;
-  }
+#typeCurrency {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
 
-  #clientAmount {
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-align: center;
-    width: auto;
-    min-width: 80px;
-    max-width: 200px;
-    padding: 5px;
-    outline: none;
-    box-sizing: content-box;
-    -moz-appearance: textfield;
-  }
+#typeConversionInfo {
+  width: 100%;
+  margin-bottom: 10px;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
 
-  #clientAmount::-webkit-outer-spin-button,
-  #clientAmount::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+.currency-label {
+  opacity: 0.5;
+  transition: 0.3s ease;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-right: 5px;
+}
 
-  /* Icono de compartir */
-  .share-icon {
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
+#typeCurrency input[name="currency"] {
+  display: none;
+}
 
-  .share-icon:hover {
-    transform: scale(1.1);
-  }
+#typeCurrency input[name="currency"]:checked + .currency-label {
+  background: var(--bg-cards);
+  opacity: 1;
+  font-weight: bold;
+}
+
+.rowTasas {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.rowTasas li {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.rowTasas small {
+  margin-left: 8px;
+  font-size: 0.8em;
+}
+
+.rowTasas .tasa {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.resultado {
+  background-color: var(--bg-cards);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.resultado small {
+  color: var(--font-color);
+  opacity: 0.8;
+}
+
+.resultado strong {
+  color: var(--font-color);
+  font-size: 1.5em;
+  display: block;
+  margin-top: 5px;
+}
+
+.error-message,
+.change-indicator {
+  font-size: 0.9em;
+}
+
+.error-message {
+  color: #f44336;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.change-indicator {
+  margin: 0 10px;
+  font-weight: bold;
+}
 </style>
 
 <script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
-    const amountInput = document.getElementById("clientAmount");
-    const priceElements = document.querySelectorAll(".price-value");
+// Constantes y configuración
+const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
+const MIN_API_CALL_INTERVAL = 5000; // 5 segundos entre llamadas
+const UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutos
 
-    function updatePrices() {
-      const amount = parseFloat(amountInput.value) || 1;
+// Estado de la aplicación
+const state = {
+  rates: {
+    bcv: 0,
+    paralelo: 0,
+    promedio: 0
+  },
+  lastUpdate: null,
+  lastApiCall: 0,
+  selectedCurrency: 'usd'
+};
 
-      priceElements.forEach((el) => {
-        const originalPrice = parseFloat(el.dataset.original);
-        el.textContent = (originalPrice * amount).toFixed(2);
-      });
+// Cache de elementos DOM
+const elements = {
+  typeConversionInfo: document.getElementById("typeConversionInfo"),
+  btnToggleCurrency: document.getElementById("btnToggleCurrency"),
+  currencyRadios: document.querySelectorAll('input[name="currency"]'),
+  amountInput: document.getElementById("amountInput"),
+  resultValue: document.getElementById("resultValue"),
+  lastUpdate: document.getElementById("lastUpdate"),
+  tasas: {
+    bcv: document.querySelector(".rowTasas li:nth-child(1) .tasa"),
+    paralelo: document.querySelector(".rowTasas li:nth-child(2) .tasa"),
+    promedio: document.querySelector(".rowTasas li:nth-child(3) .tasa")
+  }
+};
+
+// Inicialización
+document.addEventListener("DOMContentLoaded", () => {
+  setupEventListeners();
+  initializeApp();
+});
+
+// Configuración de event listeners
+function setupEventListeners() {
+  // Delegación de eventos para mejor performance
+  document.getElementById("typeCurrency").addEventListener("change", (e) => {
+    if (e.target.matches('input[name="currency"]')) {
+      handleCurrencyChange(e.target.value);
     }
-
-    amountInput.addEventListener("input", updatePrices);
-
-    // Inicializar
-    updatePrices();
   });
+
+  elements.btnToggleCurrency.addEventListener("click", toggleCurrency);
+  elements.amountInput.addEventListener("input", debounce(calculateRates, 500));
+
+  // Botones de monto rápido
+  document.querySelectorAll(".containerAmountInput button:not(#btnToggleCurrency)").forEach(btn => {
+    btn.addEventListener("click", () => {
+      elements.amountInput.value = btn.textContent.replace('$', '');
+      calculateRates();
+    });
+  });
+}
+
+// Inicializar la aplicación
+async function initializeApp() {
+  try {
+    await fetchRates();
+    // Configurar actualización periódica
+    setInterval(fetchRates, UPDATE_INTERVAL);
+  } catch (error) {
+    showError("Error al cargar tasas iniciales");
+  }
+}
+
+// Obtener tasas de la API con protección anti-scraping
+async function fetchRates() {
+  const now = Date.now();
+  if (now - state.lastApiCall < MIN_API_CALL_INTERVAL) return;
+  state.lastApiCall = now;
+
+  try {
+    const response = await fetch(API_URL, {
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    
+    const data = await response.json();
+    validateApiData(data);
+    
+    updateState(data);
+    updateUI();
+    calculateRates();
+
+  } catch (error) {
+    console.error("Error fetching rates:", error);
+    showError("Error actualizando tasas. Intentando nuevamente...");
+    setTimeout(fetchRates, 10000); // Reintentar después de 10 segundos
+  }
+}
+
+// Validar datos de la API
+function validateApiData(data) {
+  if (!data?.monitors?.bcv?.price || !data?.monitors?.enparalelovzla?.price) {
+    throw new Error("Datos de API incompletos");
+  }
+}
+
+// Actualizar el estado de la aplicación
+function updateState(data) {
+  state.rates.bcv = data.monitors.bcv.price;
+  state.rates.paralelo = data.monitors.enparalelovzla.price;
+  state.rates.promedio = (state.rates.bcv + state.rates.paralelo) / 2;
+  state.lastUpdate = `${data.datetime.date} ${data.datetime.time}`;
+  state.selectedCurrency = document.querySelector('input[name="currency"]:checked').value;
+  
+  // Guardar datos completos de los monitores
+  state.monitors = {
+    bcv: data.monitors.bcv,
+    paralelo: data.monitors.enparalelovzla
+  };
+}
+
+// Actualizar la interfaz de usuario
+function updateUI() {
+  // Actualizar tasas con datos completos
+  updateRateUI('bcv', state.rates.bcv, state.monitors.bcv);
+  updateRateUI('paralelo', state.rates.paralelo, state.monitors.paralelo);
+  
+  // Calcular y mostrar datos para el promedio
+  const promedioChange = ((state.monitors.bcv.change + state.monitors.paralelo.change) / 2).toFixed(2);
+  const promedioPercent = ((state.monitors.bcv.percent + state.monitors.paralelo.percent) / 2).toFixed(2);
+  const promedioColor = promedioChange > 0 ? 'green' : promedioChange < 0 ? 'red' : 'neutral';
+  const promedioSymbol = promedioChange > 0 ? '▲' : promedioChange < 0 ? '▼' : '';
+  
+  elements.tasas.promedio.textContent = state.rates.promedio.toFixed(2);
+  elements.tasas.promedio.parentElement.innerHTML = `
+    Promedio (<span class="tasa">${state.rates.promedio.toFixed(2)}</span>)
+    <span class="change-indicator" style="color:${promedioColor}">
+      ${promedioSymbol} ${Math.abs(promedioChange)} (${promedioPercent}%)
+    </span>
+  `;
+  
+  elements.lastUpdate.textContent = `Actualizado: ${state.lastUpdate}`;
+}
+
+// Actualizar UI de cada tasa con indicadores de cambio
+function updateRateUI(type, value, monitorData) {
+  const rateElement = elements.tasas[type];
+  const change = monitorData.change || 0;
+  const percent = monitorData.percent || 0;
+  const symbol = monitorData.symbol || '';
+  const colorClass = getChangeColorClass(monitorData.color);
+  
+  rateElement.textContent = value.toFixed(2);
+  rateElement.parentElement.innerHTML = `
+    ${monitorData.title || type} (<span class="tasa" >${value.toFixed(2)}</span>)
+    <span class="change-indicator" style="color:${monitorData.color};" >
+      ${symbol} ${change} (${percent}%)
+    </span>
+  `;
+}
+// Función auxiliar para determinar clase de color
+function getChangeColorClass(color) {
+  return color === 'green' ? 'change-up' : 
+         color === 'red' ? 'change-down' : 'change-neutral';
+}
+// Manejar cambio de moneda
+function handleCurrencyChange(currency) {
+  state.selectedCurrency = currency;
+  updateCurrencyUI();
+  calculateRates();
+}
+
+// Alternar moneda
+function toggleCurrency() {
+  const newCurrency = this.dataset.to;
+  document.querySelector(`input[name="currency"][value="${newCurrency}"]`).checked = true;
+  handleCurrencyChange(newCurrency);
+}
+
+// Actualizar UI de moneda
+function updateCurrencyUI() {
+  const isUSD = state.selectedCurrency === 'usd';
+  
+  elements.typeConversionInfo.textContent = isUSD 
+    ? "Dólares a Bolívares" 
+    : "Bolívares a Dólares";
+  
+  elements.btnToggleCurrency.textContent = isUSD ? "USD" : "VES";
+  elements.btnToggleCurrency.dataset.to = isUSD ? "ves" : "usd";
+}
+
+// Calcular tasas con debounce
+const calculateRates = debounce(function() {
+  const amount = parseFloat(elements.amountInput.value) || 0;
+  let result;
+  
+  if (state.selectedCurrency === 'usd') {
+    result = amount * state.rates.paralelo;
+  } else {
+    result = amount / state.rates.paralelo;
+  }
+  
+  elements.resultValue.textContent = formatCurrency(result);
+}, 300);
+
+// Formatear moneda
+function formatCurrency(value) {
+  return value.toLocaleString('es-VE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+// Función debounce
+function debounce(func, delay) {
+  let timeoutId;
+  return function(...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+// Mostrar errores
+function showError(message) {
+  const errorElement = document.createElement('div');
+  errorElement.className = 'error-message';
+  errorElement.textContent = message;
+  
+  const existingError = document.querySelector('.error-message');
+  if (existingError) existingError.remove();
+  
+  document.querySelector('.calcApp').appendChild(errorElement);
+  setTimeout(() => errorElement.remove(), 5000);
+}
 </script>
