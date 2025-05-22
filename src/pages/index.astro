@@ -120,15 +120,11 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
   display: flex;
   align-items: center;
   padding: 10px ;
+  cursor: pointer;
 }
-.rowTasas li.selected::before{
-  content: attr(data-text);
-  width: 20px;
-  height: 20px;
-  background-color: #f44336;
-  position: absolute;
-  left: 3px;
-}
+ .rowTasas li:hover{
+  background-color: var(--bg-cards);
+ }
 .rowTasas small {
   margin-left: 8px;
   font-size: 0.8em;
