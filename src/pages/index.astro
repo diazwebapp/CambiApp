@@ -17,7 +17,10 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
         <p class="currency-label">VES</p>
       </label>
     </div>
-    
+    <div class="resultado">
+      <small>Resultado</small>
+      <strong id="resultValue">0</strong>
+    </div>
     <div class="containerAmountInput">
       <p style="display: block; width:100%;">Monto</p>
       <input type="number" name="amountInput" id="amountInput" step="0.01" value="1" placeholder="15">
@@ -28,31 +31,23 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
     <div class="tasas">
       <strong>Tasa a utilizar</strong>
       <ul class="rowTasas">
-        <li>BCV (<span class="tasa">0</span>)</li>
-        <li>Paralelo (<span class="tasa">0</span>)</li>
-        <li>Promedio (<span class="tasa">0</span>)</li>
+        <li data-text="bcv" class="active-rate" onclick="calculateRates(this)" >BCV = <span class="tasa">0</span></li>
+        <li data-text="paralelo" class="active-rate" onclick="calculateRates(this)">Paralelo = <span class="tasa">0</span></li>
+        <li data-text="promedio" class="active-rate" onclick="calculateRates(this)">Promedio = <span class="tasa">0</span></li>
       </ul>
       <small id="lastUpdate" style="display:block; text-align:right; color:#666;"></small>
     </div>
 
-    <div class="resultado">
-      <small>Resultado</small>
-      <strong id="resultValue">0</strong>
-    </div>
+    
   </div>
 </Layout>
 
-<style>
+<style is:inline>
   .calcApp {
   max-width: 500px;
-  min-width: 250px;
+  min-width: 290px;
   margin: auto;
   padding: 15px;
-}
-
-.containerAmountInput {
-  position: relative;
-  margin-bottom: 20px;
 }
 
 .containerAmountInput input,
@@ -66,12 +61,13 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
   width: 100%;
   padding-right: 51px;
   border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .containerAmountInput #btnToggleCurrency {
   position: absolute;
   right: 1.5px;
-  top: 26px;
+  top: 25px;
   width: 50px;
   background: transparent;
   border: none;
@@ -80,22 +76,16 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
   cursor: pointer;
 }
 
-.containerAmountInput button:not(#btnToggleCurrency) {
-  background: var(--bg-cards);
-  margin: 5px 5px 0 0;
-  cursor: pointer;
-}
-
-#typeCurrency {
+#typeCurrency, .containerAmountInput {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
+  position: relative;
 }
 
 #typeConversionInfo {
-  width: 100%;
-  margin-bottom: 10px;
   font-weight: bold;
   transition: 0.3s ease;
 }
@@ -129,16 +119,19 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
   margin-bottom: 8px;
   display: flex;
   align-items: center;
+  padding-left: 10px;
 }
-
+.rowTasas li.selected::before{
+  content: attr(data-text);
+  width: 20px;
+  height: 20px;
+  background-color: #f44336;
+  position: absolute;
+  left: 3px;
+}
 .rowTasas small {
   margin-left: 8px;
   font-size: 0.8em;
-}
-
-.rowTasas .tasa {
-  font-weight: bold;
-  margin-left: 5px;
 }
 
 .resultado {
@@ -173,8 +166,12 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
 }
 
 .change-indicator {
-  margin: 0 10px;
-  font-weight: bold;
+  margin: 0 15px;
+}
+.active-rate{
+  background-color: var(--bg-cards);
+  border: 2px solid var(--color-borders);
+  border-radius: 5px;
 }
 </style>
 
@@ -182,7 +179,7 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
 // Constantes y configuración
 const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
 const MIN_API_CALL_INTERVAL = 5000; // 5 segundos entre llamadas
-const UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutos
+const UPDATE_INTERVAL = 90 * 60 * 1000; // 90 minutos
 
 // Estado de la aplicación
 const state = {
@@ -193,9 +190,9 @@ const state = {
   },
   lastUpdate: null,
   lastApiCall: 0,
-  selectedCurrency: 'usd'
+  selectedCurrency: 'usd',
+  selectedRate: "promedio"
 };
-
 // Cache de elementos DOM
 const elements = {
   typeConversionInfo: document.getElementById("typeConversionInfo"),
@@ -204,11 +201,13 @@ const elements = {
   amountInput: document.getElementById("amountInput"),
   resultValue: document.getElementById("resultValue"),
   lastUpdate: document.getElementById("lastUpdate"),
+  containerTasas: document.querySelectorAll(".rowTasas li"),
   tasas: {
     bcv: document.querySelector(".rowTasas li:nth-child(1) .tasa"),
     paralelo: document.querySelector(".rowTasas li:nth-child(2) .tasa"),
     promedio: document.querySelector(".rowTasas li:nth-child(3) .tasa")
-  }
+  },
+  
 };
 
 // Inicialización
@@ -244,6 +243,7 @@ async function initializeApp() {
     await fetchRates();
     // Configurar actualización periódica
     setInterval(fetchRates, UPDATE_INTERVAL);
+    modifyClass(state.selectedRate)
   } catch (error) {
     showError("Error al cargar tasas iniciales");
   }
@@ -259,15 +259,28 @@ async function fetchRates() {
     const response = await fetch(API_URL, {
       headers: {
         'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        Authorization: 'Bearer JhZZj99yQrGoTOGdpNpOvQ'
       }
     });
 
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); 
+    /* const data = {
+      datetime: {
+        date: "22-04-2025",
+        time: "12:00:00"
+        },
+      monitors: {
+        bcv:{
+          price:95,
+        },
+        enparalelovzla:{
+          price:134
+        }
+        }
+      } */ 
     const data = await response.json();
     validateApiData(data);
-    
     updateState(data);
     updateUI();
     calculateRates();
@@ -297,7 +310,7 @@ function updateState(data) {
   // Guardar datos completos de los monitores
   state.monitors = {
     bcv: data.monitors.bcv,
-    paralelo: data.monitors.enparalelovzla
+    paralelo: data.monitors.enparalelovzla,
   };
 }
 
@@ -315,36 +328,36 @@ function updateUI() {
   
   elements.tasas.promedio.textContent = state.rates.promedio.toFixed(2);
   elements.tasas.promedio.parentElement.innerHTML = `
-    Promedio (<span class="tasa">${state.rates.promedio.toFixed(2)}</span>)
+    Promedio = <span class="tasa">${state.rates.promedio.toFixed(2)}</span>
     <span class="change-indicator" style="color:${promedioColor}">
       ${promedioSymbol} ${Math.abs(promedioChange)} (${promedioPercent}%)
     </span>
   `;
   
   elements.lastUpdate.textContent = `Actualizado: ${state.lastUpdate}`;
+
 }
 
 // Actualizar UI de cada tasa con indicadores de cambio
 function updateRateUI(type, value, monitorData) {
+  
   const rateElement = elements.tasas[type];
   const change = monitorData.change || 0;
   const percent = monitorData.percent || 0;
   const symbol = monitorData.symbol || '';
-  const colorClass = getChangeColorClass(monitorData.color);
   
   rateElement.textContent = value.toFixed(2);
-  rateElement.parentElement.innerHTML = `
-    ${monitorData.title || type} (<span class="tasa" >${value.toFixed(2)}</span>)
-    <span class="change-indicator" style="color:${monitorData.color};" >
-      ${symbol} ${change} (${percent}%)
-    </span>
-  `;
+  if(rateElement.parentElement){
+    rateElement.parentElement.innerHTML = `
+      ${type} (<span class="tasa" >${value.toFixed(2)}</span>)
+      <span class="change-indicator" style="color:${monitorData.color};" >
+        ${symbol} ${change} (${percent}%)
+      </span>
+    `;
+  }
+  
 }
-// Función auxiliar para determinar clase de color
-function getChangeColorClass(color) {
-  return color === 'green' ? 'change-up' : 
-         color === 'red' ? 'change-down' : 'change-neutral';
-}
+
 // Manejar cambio de moneda
 function handleCurrencyChange(currency) {
   state.selectedCurrency = currency;
@@ -372,19 +385,38 @@ function updateCurrencyUI() {
 }
 
 // Calcular tasas con debounce
-const calculateRates = debounce(function() {
-  const amount = parseFloat(elements.amountInput.value) || 0;
-  let result;
+const calculateRates = debounce(function(e) {
+  
+  let result, amount;
+
+  if(e instanceof Element || e instanceof HTMLElement){
+    state.selectedRate = e.getAttribute("data-text")
+  }
+  amount = parseFloat(elements.amountInput.value) || 0;
   
   if (state.selectedCurrency === 'usd') {
-    result = amount * state.rates.paralelo;
+    result = amount * state.rates[state.selectedRate];
   } else {
-    result = amount / state.rates.paralelo;
+    result = amount / state.rates[selectedRate];
   }
   
   elements.resultValue.textContent = formatCurrency(result);
+  
+  modifyClass(state.selectedRate)
+  
 }, 300);
+//Funcion para añadir manejar clases de los <li> en .rowTasas
+  function modifyClass(selectedRate) {
+    // Remover clase activa de todos los <li>
+      
+      for(let i = 0; i<elements.containerTasas.length;i++){
+        elements.containerTasas[i].classList.remove('active-rate');
+      }
+    // Añadir clase al <li> seleccionado en state
+    const targetLi = document.querySelector(`.rowTasas li[data-text="${selectedRate}"]`);
+    targetLi.classList.add('active-rate')
 
+  }
 // Formatear moneda
 function formatCurrency(value) {
   return value.toLocaleString('es-VE', {
