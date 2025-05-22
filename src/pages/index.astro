@@ -393,7 +393,7 @@ const calculateRates = debounce(function(e) {
   if (state.selectedCurrency === 'usd') {
     result = amount * state.rates[state.selectedRate];
   } else {
-    result = amount / state.rates[selectedRate];
+    result = amount / state.rates[state.selectedRate];
   }
   
   elements.resultValue.textContent = formatCurrency(result);
