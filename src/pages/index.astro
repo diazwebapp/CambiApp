@@ -1,7 +1,9 @@
 ---
+import PaydProfiles from "../components/PaydProfiles.astro";
 import Layout from "../layouts/Layout.astro";
 
 const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
+
 ---
 
 <Layout title="Calculadora">
@@ -40,7 +42,7 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
 
     
   </div>
-  
+  <PaydProfiles />
 </Layout>
 
 <style is:inline>
@@ -68,7 +70,7 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
 .containerAmountInput #btnToggleCurrency {
   position: absolute;
   right: 1.5px;
-  top: 25px;
+  top: 27px;
   width: 50px;
   background: transparent;
   border: none;
@@ -126,7 +128,7 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
  .rowTasas li:hover{
   background-color: var(--bg-cards);
  }
- .tasas{
+ .tasa{
   margin: 0 5px;
  }
 
@@ -161,10 +163,6 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
   text-align: center;
   margin-top: 10px;
 }
-
-.change-indicator {
-  margin: 0 15px;
-}
 .active-rate{
   background-color: var(--bg-cards);
   border: 2px solid var(--color-borders);
@@ -173,7 +171,7 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
 </style>
 
 <script is:inline>
-// Constantes y configuración
+  // Constantes y configuración
 const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
 const MIN_API_CALL_INTERVAL = 5000; // 5 segundos entre llamadas
 const UPDATE_INTERVAL = 90 * 60 * 1000; // 90 minutos
@@ -329,28 +327,50 @@ function updateUI() {
   const promedioSymbol = promedioChange > 0 ? '▲' : promedioChange < 0 ? '▼' : '<=>';
   
   elements.tasas.promedio.textContent = state.rates.promedio.toFixed(2);
-  elements.tasas.promedio.parentElement.innerHTML = `
-    Promedio <span class="tasa"> (${state.rates.promedio.toFixed(2)})</span>
-    <span class="change-indicator" style="color:${promedioColor}">
-      ${promedioSymbol} ${Math.abs(promedioChange)} 
-    </span>
-  `;
-  
-}
 
+  // Actualizar usando DocumentFragment
+  function updatePromedioElement() {
+    const promedioLi = elements.tasas.promedio.parentElement;
+    const fragment = document.createDocumentFragment();
+    
+    // 1. Crear los elementos
+    const label = document.createTextNode('Promedio ');
+    
+    const tasaSpan = document.createElement('span');
+    tasaSpan.className = 'tasa';
+    tasaSpan.textContent = `(${state.rates.promedio.toFixed(2)})`;
+    
+    const changeSpan = document.createElement('span');
+    changeSpan.style.color = promedioColor;
+    changeSpan.textContent = ` ${promedioSymbol} ${Math.abs(promedioChange)}`;
+    
+    // 2. Construir el fragmento (fuera del DOM)
+    fragment.appendChild(label);
+    fragment.appendChild(tasaSpan);
+    fragment.appendChild(changeSpan);
+    
+    // 3. Limpiar el elemento existente (más eficiente que innerHTML)
+    while (promedioLi.firstChild) {
+      promedioLi.removeChild(promedioLi.firstChild);
+    }
+    
+    // 4. Añadir el fragmento al DOM (solo 1 reflow)
+    promedioLi.appendChild(fragment);
+  }
+  updatePromedioElement();
+}
 // Actualizar UI de cada tasa con indicadores de cambio
 function updateRateUI(type, value, monitorData) {
   
   const rateElement = elements.tasas[type];
   const change = monitorData.change || 0;
-  //const percent = monitorData.percent || 0;
   const symbol = monitorData.symbol || '<=>';
   
   rateElement.textContent = value.toFixed(2);
   if(rateElement.parentElement){
     rateElement.parentElement.innerHTML = `
       ${type} <span class="tasa" > (${value.toFixed(2)})</span>
-      <span class="change-indicator" style="color:${monitorData.color};" >
+      <span style="color:${monitorData.color};" >
         ${symbol} ${change} 
       </span>
     `;

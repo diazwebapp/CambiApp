@@ -1,0 +1,383 @@
+<div class="container">
+    <strong>Perfil Bancario para transferencia</strong>
+
+    <div class="profiles-container">
+        <div id="profilesList" class="profiles-list"></div>
+    </div>
+    <div class="form-container">
+        <strong>Crear Nuevo Perfil</strong>
+        <form id="paymentProfileForm">
+            <div class="form-group">
+                <label for="name">Nombre completo:</label>
+                <input type="text" id="name" required />
+            </div>
+
+            <div class="form-group">
+                <label for="idNumber">Cédula:</label>
+                <input type="text" id="idNumber" required />
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Teléfono:</label>
+                <input type="tel" id="phone" required />
+            </div>
+
+            <div class="form-group">
+                <label for="bank">Banco:</label>
+                <select id="bank" required>
+                    <option value="" disabled selected
+                        >Seleccione un banco</option
+                    >
+                    <option value="0102 - BANCO DE VENEZUELA"
+                        >0102 - BANCO DE VENEZUELA</option
+                    >
+                    <option value="0104 - BANCO VENEZOLANO DE CREDITO"
+                        >0104 - BANCO VENEZOLANO DE CREDITO</option
+                    >
+                    <option value="0105 - BANCO MERCANTIL"
+                        >0105 - BANCO MERCANTIL</option
+                    >
+                    <option value="0108 - BBVA PROVINCIAL"
+                        >0108 - BBVA PROVINCIAL</option
+                    >
+                    <option value="0114 - BANCARIBE">0114 - BANCARIBE</option>
+                    <option value="0115 - BANCO EXTERIOR"
+                        >0115 - BANCO EXTERIOR</option
+                    >
+                    <option value="0128 - BANCO CARONI"
+                        >0128 - BANCO CARONI</option
+                    >
+                    <option value="0134 - BANESCO">0134 - BANESCO</option>
+                    <option value="0137 - BANCO SOFITASA"
+                        >0137 - BANCO SOFITASA</option
+                    >
+                    <option value="0138 - BANCO PLAZA"
+                        >0138 - BANCO PLAZA</option
+                    >
+                    <option value="0146 - BANGENTE">0146 - BANGENTE</option>
+                    <option value="0151 - BANCO FONDO COMUN"
+                        >0151 - BANCO FONDO COMUN</option
+                    >
+                    <option value="0156 - 100% BANCO">0156 - 100% BANCO</option>
+                    <option value="0157 - DELSUR BANCO UNIVERSAL"
+                        >0157 - DELSUR BANCO UNIVERSAL</option
+                    >
+                    <option value="0163 - BANCO DEL TESORO"
+                        >0163 - BANCO DEL TESORO</option
+                    >
+                    <option value="0166 - BANCO AGRICOLA DE VENEZUELA"
+                        >0166 - BANCO AGRICOLA DE VENEZUELA</option
+                    >
+                    <option value="0168 - BANCRECER">0168 - BANCRECER</option>
+                    <option value="0171 - BANCO ACTIVO"
+                        >0171 - BANCO ACTIVO</option
+                    >
+                    <option value="0172 - BANCAMIGA BANCO UNIVERSAL, C.A."
+                        >0172 - BANCAMIGA BANCO UNIVERSAL, C.A.</option
+                    >
+                    <option value="0173 - BANCO INTERNACIONAL DE DESARROLLO"
+                        >0173 - BANCO INTERNACIONAL DE DESARROLLO</option
+                    >
+                    <option value="0174 - BANPLUS">0174 - BANPLUS</option>
+                    <option
+                        value="0175 - BANCO DIGITAL DE LOS TRABAJADORES, BANCO UNIVERSAL"
+                        >0175 - BANCO DIGITAL DE LOS TRABAJADORES, BANCO
+                        UNIVERSAL</option
+                    >
+                    <option value="0177 - BANFANB">0177 - BANFANB</option>
+                    <option value="0191 - BANCO NACIONAL DE CREDITO"
+                        >0191 - BANCO NACIONAL DE CREDITO</option
+                    >
+                    <option
+                        value="0601 - INSTITUTO MUNICIPAL DE CREDITO POPULAR"
+                        >0601 - INSTITUTO MUNICIPAL DE CREDITO POPULAR</option
+                    >
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="accountNumber">Número de cuenta:</label>
+                <input type="text" id="accountNumber" required />
+            </div>
+
+            <button type="submit">Guardar Perfil</button>
+        </form>
+    </div>
+
+</div>
+
+<style is:inline>
+    .container {
+        max-width: 500px;
+        padding: 10px;
+        margin: 0 auto;
+    }
+
+    .form-container {
+        background: var(--bg-cards);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px var(--color-borders);
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+    
+    .form-container strong {
+        display: block;
+        text-align: center;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .profile-select, .profile-actions button{
+        border-radius: 1.2rem;
+    }
+    input,
+    select {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .profiles-container {
+        border-radius: 8px;
+    }
+
+    .profiles-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        margin-top: 20px;
+    }
+    .profile-actions button{
+        display: block;
+        width: 100%;
+        margin: 5px auto;
+        border:none
+    }
+
+    .copy-btn {
+    background-color: var(--primary);
+    color: var(--font-color);
+    border-radius: 4px;
+}
+
+.copy-btn::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'%3E%3C/rect%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 8px;
+    margin-bottom: -3px;
+}
+
+    .delete-btn {
+        background-color: var(--danger);
+    }
+    .delete-btn::before {
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'%3E%3C/path%3E%3Cpath d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        margin-right: 8px;
+        margin-bottom: -3px;
+    }
+</style>
+
+<script is:inline>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("paymentProfileForm");
+        const profilesList = document.getElementById("profilesList");
+
+        // Cargar perfiles guardados al iniciar
+        loadProfiles();
+
+        // Manejar el envío del formulario
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Obtener valores del formulario
+            const name = document.getElementById("name").value;
+            const idNumber = document.getElementById("idNumber").value;
+            const phone = document.getElementById("phone").value;
+            const bank = document.getElementById("bank").value;
+            const accountNumber =
+                document.getElementById("accountNumber").value;
+
+            // Crear nuevo perfil
+            const newProfile = {
+                id: Date.now(),
+                name,
+                idNumber,
+                phone,
+                bank,
+                accountNumber,
+                selected: "no",
+            };
+
+            // Guardar el perfil
+            saveProfile(newProfile);
+
+            // Recargar la lista de perfiles
+            loadProfiles();
+
+            // Resetear el formulario
+            form.reset();
+        });
+
+        // Función para guardar un perfil en localStorage
+        function saveProfile(profile) {
+            let profiles =
+                JSON.parse(localStorage.getItem("paymentProfiles")) || [];
+            if (profiles.length < 1) {
+                profile.selected = "si";
+            }
+            profiles.push(profile);
+            localStorage.setItem("paymentProfiles", JSON.stringify(profiles));
+        }
+
+        // Función para cargar los perfiles desde localStorage
+        function loadProfiles() {
+            const profiles = JSON.parse(localStorage.getItem("paymentProfiles")) || [];
+            profilesList.innerHTML = "";
+
+            if (profiles.length === 0) {
+                profilesList.innerHTML = "<p>No hay perfiles guardados.</p>";
+                return;
+            }
+
+            // Crear el elemento select
+            const profileSelect = document.createElement("select");
+            profileSelect.className = "profile-select";
+            profileSelect.id = "profile-select";
+            profileSelect.addEventListener("change", handleProfile); 
+
+
+            // Agregar opciones para cada perfil usando for
+            for (let i = 0; i < profiles.length; i++) {
+                const profile = profiles[i];
+                const option = document.createElement("option");
+                option.value = profile.id; // Puedes usar el ID como valor
+                option.textContent = `${profile.name} - ${profile.bank}`;
+                console.log(profile.selected)
+                if (profile.selected === "si") {
+                    option.selected = true;
+                }
+                profileSelect.appendChild(option);
+            }
+
+            // Agregar el select al contenedor (asumiendo que profilesList es el contenedor)
+            profilesList.innerHTML = ""; // Limpiar el contenedor primero
+            profilesList.appendChild(profileSelect);
+            // Crear contenedor para acciones
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'profile-actions';
+
+            // Botón Copiar
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'action-btn copy-btn';
+            copyBtn.textContent = 'Copiar datos';
+            actionsDiv.appendChild(copyBtn);
+
+            // Botón Eliminar
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'action-btn delete-btn';
+            deleteBtn.textContent = 'Eliminar';
+            actionsDiv.appendChild(deleteBtn);
+
+            // Agregar todo al contenedor principal
+            profilesList.innerHTML = '';
+            profilesList.appendChild(profileSelect);
+            profilesList.appendChild(actionsDiv);
+            // Agregar event listeners a los botones
+            document.querySelectorAll(".copy-btn").forEach((btn) => {
+                btn.addEventListener("click", copyProfileData);
+            });
+
+            document.querySelectorAll(".delete-btn").forEach((btn) => {
+                btn.addEventListener("click", deleteProfile);
+            });
+        }
+
+        // Función para copiar los datos del perfil al portapapeles
+        function copyProfileData(e) {
+            const profileId = parseInt(e.target.getAttribute("data-id"));
+            const profiles =
+                JSON.parse(localStorage.getItem("paymentProfiles")) || [];
+            const profile = profiles.find((p) => p.id === profileId);
+
+            if (profile) {
+                const textToCopy = `
+                Nombre: ${profile.name}
+                Cédula: ${profile.idNumber}
+                Teléfono: ${profile.phone}
+                Banco: ${profile.bank}
+                Número de cuenta: ${profile.accountNumber}
+            `;
+
+                navigator.clipboard
+                    .writeText(textToCopy)
+                    .then(() => {
+                        alert("Datos copiados al portapapeles");
+                    })
+                    .catch((err) => {
+                        console.error("Error al copiar: ", err);
+                    });
+            }
+        }
+
+        // Función para eliminar un perfil
+        function deleteProfile(e) {
+            const select = document.getElementById("profile-select")
+            console.log(select.value)
+            return
+            const profileId = parseInt(e.target.getAttribute("data-id"));
+            if (confirm(`¿Estás seguro de que quieres eliminar el perfil ${profileId} ?`)) {
+                
+                let profiles = JSON.parse(localStorage.getItem("paymentProfiles")) || [];
+
+                // Filtrar para eliminar el perfil seleccionado
+                profiles = profiles.filter((p) => p.id !== profileId);
+
+                // Guardar los cambios
+                localStorage.setItem(
+                    "paymentProfiles",
+                    JSON.stringify(profiles),
+                );
+
+                // Recargar la lista
+                loadProfiles();
+            }
+        }
+        
+        // 2. Función que maneja el cambio de selección
+        function handleProfile(event) {
+            const selectedProfileId = Number(event.target.value); // Obtiene el ID del perfil seleccionado
+            
+            // 3. Obtener perfiles del localStorage (o usar un array vacío si no existen)
+            const profiles = JSON.parse(localStorage.getItem('paymentProfiles')) || [];
+            
+            // 4. Actualizar la propiedad 'selected' de todos los perfiles
+            const updatedProfiles = [];
+            for (let i = 0; i < profiles.length; i++) {
+                const profile = profiles[i];
+                updatedProfiles.push({
+                    ...profile,
+                    selected: profile.id === selectedProfileId ? 'si' : 'no'
+                });
+            }
+            
+            // 5. Guardar los perfiles actualizados en localStorage
+            localStorage.setItem('paymentProfiles', JSON.stringify(updatedProfiles));
+        }
+    });
+</script>

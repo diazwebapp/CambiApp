@@ -49,15 +49,19 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
 </html>
 <style is:global>
   :root {
-    --bg-app: #f0f0f0;
-    --color-borders: rgb(94, 94, 94);
-    --font-color: #1d1d1d;
-    --bg-cards:rgb(216, 215, 215);
+    --bg-app: hsl(0, 0%, 94%);
+    --color-borders: hsl(0, 0%, 37%);
+    --font-color: hsl(0, 0%, 11%);
+    --bg-cards:hsl(0, 1%, 85%);
+    --primary: hsl(217 89% 50%);
+    --secondary: hsl(217.2 32.6% 17.5%);
+    --success: hsl(123, 91%, 46%);
+    --danger: hsl(9, 91%, 46%);
   }
   [data-theme="dark"] {
-    --bg-app: black;
-    --font-color: white;
-    --bg-cards:rgb(30, 30, 30);
+    --bg-app: #000000;
+    --font-color: #ffffff;
+    --bg-cards:#1e1e1e;
   }
   * {
     margin: 0;
@@ -86,7 +90,7 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
   [data-theme="dark"] .dark-icon {
     display: inline;
   }
-  input,button {
+  input,button, option, select {
     border: 2px solid var(--color-borders);
     background-color: var(--bg-app);
     padding: 10px;
@@ -162,5 +166,6 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
       document.documentElement.setAttribute("data-theme", newTheme);
       localStorage.setItem("theme", newTheme);
     });
+
   });
 </script>
