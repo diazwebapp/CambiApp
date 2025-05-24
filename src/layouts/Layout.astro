@@ -130,6 +130,16 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
   footer,header,main {
     padding: 5px 2% 5px 2%;
   }
+  header{
+    position: fixed;
+    top:0;
+    background-color: var(--bg-app);
+    z-index: 2;
+    width: 100%;
+  }
+  body{
+    padding-top: 60px;
+  }
 </style>
 
 <script is:inline>

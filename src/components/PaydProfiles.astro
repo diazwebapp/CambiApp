@@ -116,8 +116,7 @@
     .form-container {
         background: var(--bg-cards);
         border-radius: 8px;
-        box-shadow: 0 2px 4px var(--color-borders);
-        margin-bottom: 20px;
+        margin-top: 20px;
         padding: 20px;
     }
     
@@ -268,7 +267,7 @@
                 const option = document.createElement("option");
                 option.value = profile.id; // Puedes usar el ID como valor
                 option.textContent = `${profile.name} - ${profile.bank}`;
-                console.log(profile.selected)
+                
                 if (profile.selected === "si") {
                     option.selected = true;
                 }
