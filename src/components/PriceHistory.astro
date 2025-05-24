@@ -15,57 +15,55 @@ interface PriceHistoryProps {
 }
 
 const { 
-  apiUrl = 'https://pydolarve.org/api/v2/dollar/history?page=alcambio&monitor=enparalelovzla&start_date=01-01-2025&end_date=01-04-2025',
   apiToken = 'JhZZj99yQrGoTOGdpNpOvQ'
 } = Astro.props;
 ---
 
-<div class="price-history-container">
-  <div class="price-history-header">
-    <div>
-      <h2>Histórico de Tasas</h2>
-      <p>Visualiza cómo han evolucionado las tasas a lo largo del tiempo</p>
-    </div>
-    <button id="export-csv" class="export-button">
-      Exportar CSV
-    </button>
-  </div>
 
-  <div class="price-history-card">
-    <div class="time-filter">
-      <button class="filter-btn active" data-filter="week">Última semana</button>
-      <button class="filter-btn" data-filter="month">Último mes</button>
-      <button class="filter-btn" data-filter="all">Todo</button>
+
+  <div class="price-history-card" role="region" aria-labelledby="price-history-heading">
+    <div class="time-filter" role="tablist" aria-label="Filtros de período de tiempo">
+      <button class="filter-btn active" data-filter="week" role="tab" aria-selected="true" aria-controls="priceChart" id="tab-week">
+        Última semana
+      </button>
+      <button class="filter-btn" data-filter="month" role="tab" aria-selected="false" aria-controls="priceChart" id="tab-month">
+        Último mes
+      </button>
+      <button class="filter-btn" data-filter="all" role="tab" aria-selected="false" aria-controls="priceChart" id="tab-all">
+        Todo
+      </button>
     </div>
     
     <div class="chart-container">
-      <canvas id="priceChart"></canvas>
-      <div id="loading">Cargando datos...</div>
+      <canvas id="priceChart" aria-label="Gráfico de evolución de tasas de cambio" role="img">
+        <p>Su navegador no soporta elementos canvas. Aquí estaría la representación gráfica de la evolución de las tasas de cambio.</p>
+      </canvas>
+      <div id="loading" aria-live="polite">Cargando datos...</div>
     </div>
 
-    <div class="chart-legend">
+    <div class="chart-legend" aria-label="Leyenda del gráfico">
       <div class="legend-item">
-        <span class="legend-color" style="background-color: #3B82F6;"></span>
-        <span>Precio</span>
+        <span class="legend-color" style="background-color: #3B82F6;" aria-hidden="true"></span>
+        <span>BCV (Oficial)</span>
       </div>
       <div class="legend-item">
-        <span class="legend-color" style="background-color: #EF4444;"></span>
-        <span>Máximo</span>
+        <span class="legend-color" style="background-color: #EF4444;" aria-hidden="true"></span>
+        <span>Paralelo</span>
       </div>
       <div class="legend-item">
-        <span class="legend-color" style="background-color: #10B981;"></span>
+        <span class="legend-color" style="background-color: #10B981;" aria-hidden="true"></span>
         <span>Promedio</span>
       </div>
     </div>
   </div>
 
-  <div class="current-price">
-    <div id="date-display"></div>
-    <div id="price-display"></div>
+  <div class="current-price" aria-live="polite">
+    <div id="date-display" role="timer" aria-atomic="true"></div>
+    <div id="price-display" aria-atomic="true"></div>
   </div>
-</div>
 
-<script > 
+
+<script>
   import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend } from 'chart.js';
   
   // Register required Chart.js components
@@ -97,72 +95,139 @@ const {
 
   // Main function
   document.addEventListener('DOMContentLoaded', async () => {
-    const apiUrl = 'https://pydolarve.org/api/v2/dollar/history?page=alcambio&monitor=enparalelovzla&start_date=01-01-2025&end_date=01-04-2025';
+    const fecha = new Date();
+    const fechaFormateada = fecha.toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).replace(/\//g, '-');
+    
     const apiToken = 'JhZZj99yQrGoTOGdpNpOvQ';
     const loadingElement = document.getElementById('loading');
     const dateDisplay = document.getElementById('date-display');
     const priceDisplay = document.getElementById('price-display');
     
-    let priceData: ApiResponse | null = null;
+    let bcvData: ApiResponse | null = null;
+    let parallelData: ApiResponse | null = null;
+    let combinedData: any[] = [];
     let chart: Chart | null = null;
 
     try {
-      // Fetch data
+      // Fetch data from both monitors
       loadingElement.textContent = 'Cargando datos...';
-      const response = await fetch(apiUrl, {
+      
+      // Fetch BCV (Oficial) data
+      const bcvUrl = `https://pydolarve.org/api/v2/dollar/history?page=alcambio&monitor=bcv&start_date=01-01-2025&end_date=${fechaFormateada}`;
+      const bcvResponse = await fetch(bcvUrl, {
         headers: {
           Authorization: `Bearer ${apiToken}`
         }
       });
       
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+      if (!bcvResponse.ok) {
+        throw new Error(`Error fetching BCV data: ${bcvResponse.status}`);
       }
       
-      priceData = await response.json();
+      bcvData = await bcvResponse.json();
+      
+      // Fetch Parallel data
+      const parallelUrl = `https://pydolarve.org/api/v2/dollar/history?page=alcambio&monitor=enparalelovzla&start_date=01-01-2025&end_date=${fechaFormateada}`;
+      const parallelResponse = await fetch(parallelUrl, {
+        headers: {
+          Authorization: `Bearer ${apiToken}`
+        }
+      });
+      
+      if (!parallelResponse.ok) {
+        throw new Error(`Error fetching Parallel data: ${parallelResponse.status}`);
+      }
+      
+      parallelData = await parallelResponse.json();
+      
+      // Combine and process data
+      if (bcvData.history && parallelData.history) {
+        // We need to match dates between both datasets
+        const bcvHistory = [...bcvData.history];
+        const parallelHistory = [...parallelData.history];
+        
+        // Find common dates
+        const commonDates = new Set();
+        
+        // Add BCV dates
+        bcvHistory.forEach(item => {
+          const date = item.last_update.split(',')[0];
+          commonDates.add(date);
+        });
+        
+        // Add Parallel dates
+        parallelHistory.forEach(item => {
+          const date = item.last_update.split(',')[0];
+          commonDates.add(date);
+        });
+        
+        // Create combined dataset
+        combinedData = Array.from(commonDates).map(date => {
+          const bcvItem = bcvHistory.find(item => item.last_update.startsWith(date));
+          const parallelItem = parallelHistory.find(item => item.last_update.startsWith(date));
+          
+          return {
+            last_update: `${date}, 00:00`, // Standardize time
+            bcv_price: bcvItem ? bcvItem.price : null,
+            parallel_price: parallelItem ? parallelItem.price : null,
+            // Calculate average if both values exist
+            average_price: (bcvItem && parallelItem) ? (bcvItem.price + parallelItem.price) / 2 : null,
+            // Add timestamp for sorting
+            timestamp: new Date(date.split('/').reverse().join('-')).getTime()
+          };
+        }).filter(item => item.bcv_price !== null && item.parallel_price !== null);
+        
+        // Sort combined data by date (ascending)
+        combinedData.sort((a, b) => a.timestamp - b.timestamp);
+      }
+      
       loadingElement.style.display = 'none';
       
       // Display current date and price
-      if (dateDisplay && priceDisplay && priceData.datetime && priceData.history.length > 0) {
-        dateDisplay.textContent = `${priceData.datetime.date} - ${priceData.datetime.time}`;
-        priceDisplay.textContent = `Precio actual: ${formatPrice(priceData.history[0].price)}`;
+      if (dateDisplay && priceDisplay && combinedData.length > 0) {
+        const latest = combinedData[combinedData.length - 1]; // Get the most recent item
+        dateDisplay.textContent = latest.last_update;
+        priceDisplay.innerHTML = `
+          <span>BCV: ${formatPrice(latest.bcv_price)}</span>
+          <span>Paralelo: ${formatPrice(latest.parallel_price)}</span>
+          <span>Promedio: ${formatPrice(latest.average_price)}</span>
+        `;
       }
       
       // Initialize chart
-      initChart(priceData);
+      initChart(combinedData);
       
       // Setup filter buttons
-      setupFilters(priceData);
+      setupFilters(combinedData);
       
       // Setup export button
-      setupExport(priceData);
+      setupExport(combinedData);
     } catch (error) {
       console.error('Error fetching data:', error);
       loadingElement.textContent = 'Error al cargar los datos. Intente nuevamente.';
     }
 
     // Initialize chart with data
-    function initChart(data: ApiResponse) {
-      if (!data || !data.history || data.history.length === 0) return;
+    function initChart(data: typeof combinedData) {
+      if (!data || data.length === 0) return;
       
       const ctx = document.getElementById('priceChart') as HTMLCanvasElement;
       if (!ctx) return;
       
-      // Process and reverse data to show oldest to newest
-      const historyData = [...data.history].reverse();
-      
-      const labels = historyData.map(item => {
-        // Format date from DD/MM/YYYY to simpler display
+      // Extract labels (dates) in ascending order
+      const labels = data.map(item => {
         const dateParts = item.last_update.split(',')[0].split('/');
         return `${dateParts[0]}/${dateParts[1]}`;
       });
       
-      const prices = historyData.map(item => item.price);
-      const highPrices = historyData.map(item => item.price_high);
-      const lowPrices = historyData.map(item => item.price_low);
-      
-      // Calculate average between high and low
-      const avgPrices = historyData.map(item => (item.price_high + item.price_low) / 2);
+      // Extract prices in the same order
+      const bcvPrices = data.map(item => item.bcv_price);
+      const parallelPrices = data.map(item => item.parallel_price);
+      const avgPrices = data.map(item => item.average_price);
       
       const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
       const gridColor = isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
@@ -174,9 +239,9 @@ const {
           labels: labels,
           datasets: [
             {
-              label: 'Precio',
-              data: prices,
-              borderColor: '#3B82F6', // Primary blue
+              label: 'BCV (Oficial)',
+              data: bcvPrices,
+              borderColor: '#3B82F6',
               backgroundColor: 'rgba(59, 130, 246, 0.1)',
               borderWidth: 2,
               tension: 0.4,
@@ -184,9 +249,9 @@ const {
               pointHoverRadius: 5
             },
             {
-              label: 'Máximo',
-              data: highPrices,
-              borderColor: '#EF4444', // Red
+              label: 'Paralelo',
+              data: parallelPrices,
+              borderColor: '#EF4444',
               backgroundColor: 'rgba(239, 68, 68, 0.1)',
               borderWidth: 2,
               tension: 0.4,
@@ -197,7 +262,7 @@ const {
             {
               label: 'Promedio',
               data: avgPrices,
-              borderColor: '#10B981', // Green
+              borderColor: '#10B981',
               backgroundColor: 'rgba(16, 185, 129, 0.1)',
               borderWidth: 2,
               tension: 0.4,
@@ -247,7 +312,14 @@ const {
               ticks: {
                 color: textColor,
                 maxRotation: 45,
-                minRotation: 45
+                minRotation: 45,
+                // Show only some labels to avoid clutter
+                callback: function(value, index, values) {
+                  // Show all labels if there are few
+                  if (values.length <= 15) return this.getLabelForValue(value);
+                  // Show every 3 labels if there are many
+                  return index % 3 === 0 ? this.getLabelForValue(value) : '';
+                }
               }
             },
             y: {
@@ -298,8 +370,8 @@ const {
     }
     
     // Setup time period filters
-    function setupFilters(data: ApiResponse) {
-      if (!data || !data.history) return;
+    function setupFilters(data: typeof combinedData) {
+      if (!data || data.length === 0) return;
       
       const filterButtons = document.querySelectorAll('.filter-btn');
       
@@ -319,17 +391,16 @@ const {
     }
     
     // Update chart with filtered data
-    function updateChartData(filter: string, data: ApiResponse) {
-      if (!chart || !data || !data.history) return;
-      
-      // Deep clone the history array to avoid modifying the original
-      let filteredData = [...data.history].reverse();
+    function updateChartData(filter: string, data: typeof combinedData) {
+      if (!chart || !data || data.length === 0) return;
       
       // Apply time filter
+      let filteredData = [...data];
+      
       if (filter === 'week') {
-        filteredData = filteredData.slice(-7); // Last 7 days
+        filteredData = filteredData.slice(-7); // Last 7 days (most recent)
       } else if (filter === 'month') {
-        filteredData = filteredData.slice(-30); // Last 30 days
+        filteredData = filteredData.slice(-30); // Last 30 days (most recent)
       }
       
       // Update chart data
@@ -338,30 +409,31 @@ const {
         return `${dateParts[0]}/${dateParts[1]}`;
       });
       
-      const prices = filteredData.map(item => item.price);
-      const highPrices = filteredData.map(item => item.price_high);
-      const avgPrices = filteredData.map(item => (item.price_high + item.price_low) / 2);
+      const bcvPrices = filteredData.map(item => item.bcv_price);
+      const parallelPrices = filteredData.map(item => item.parallel_price);
+      const avgPrices = filteredData.map(item => item.average_price);
       
       chart.data.labels = labels;
-      chart.data.datasets[0].data = prices;
-      chart.data.datasets[1].data = highPrices;
+      chart.data.datasets[0].data = bcvPrices;
+      chart.data.datasets[1].data = parallelPrices;
       chart.data.datasets[2].data = avgPrices;
       
       chart.update();
     }
     
     // Setup CSV export
-    function setupExport(data: ApiResponse) {
+    function setupExport(data: typeof combinedData) {
       const exportButton = document.getElementById('export-csv');
       
-      if (exportButton && data && data.history) {
+      if (exportButton && data && data.length > 0) {
         exportButton.addEventListener('click', () => {
           // Create CSV content
           let csvContent = 'data:text/csv;charset=utf-8,';
-          csvContent += 'Fecha,Precio,Precio Máximo,Precio Mínimo\n';
+          csvContent += 'Fecha,Precio BCV,Precio Paralelo,Precio Promedio\n';
           
-          data.history.forEach(item => {
-            csvContent += `${item.last_update},${item.price},${item.price_high},${item.price_low}\n`;
+          // Export in chronological order
+          data.forEach(item => {
+            csvContent += `${item.last_update},${item.bcv_price},${item.parallel_price},${item.average_price}\n`;
           });
           
           // Create download link
@@ -388,52 +460,7 @@ const {
 </script>
 
 <style>
-  .price-history-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem;
-  }
-
-  .price-history-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .price-history-header h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-    line-height: 1.2;
-  }
-
-  .price-history-header p {
-    margin: 0.5rem 0 0;
-    opacity: 0.8;
-  }
-
-  .export-button {
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--rounded);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-  }
-
-  .export-button:hover {
-    background-color: hsl(217 89% 45%);
-    transform: translateY(-1px);
-  }
-
-  .export-button:active {
-    transform: translateY(1px);
-  }
+  
 
   .price-history-card {
     background-color: var(--bg-cards);
@@ -525,6 +552,13 @@ const {
   #price-display {
     font-size: 1.1rem;
     font-weight: 600;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  #price-display span {
+    white-space: nowrap;
   }
 
   @media (max-width: 768px) {
@@ -540,6 +574,11 @@ const {
     .current-price {
       flex-direction: column;
       align-items: flex-start;
+    }
+
+    #price-display {
+      flex-direction: column;
+      gap: 0.5rem;
     }
   }
 </style>
