@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "astro": "^5.7.13",
-    "servor": "^4.0.2"
+    "servor": "^4.0.2",
+    "chart.js": "^4.4.1"
   }
 }

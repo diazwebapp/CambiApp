@@ -1,0 +1,545 @@
+---
+// PriceHistory.astro component
+import { formatDate, formatPrice } from '../utils/formatters';
+
+interface HistoryItem {
+  last_update: string;
+  price: number;
+  price_high: number;
+  price_low: number;
+}
+
+interface PriceHistoryProps {
+  apiUrl?: string;
+  apiToken?: string;
+}
+
+const { 
+  apiUrl = 'https://pydolarve.org/api/v2/dollar/history?page=alcambio&monitor=enparalelovzla&start_date=01-01-2025&end_date=01-04-2025',
+  apiToken = 'JhZZj99yQrGoTOGdpNpOvQ'
+} = Astro.props;
+---
+
+<div class="price-history-container">
+  <div class="price-history-header">
+    <div>
+      <h2>Histórico de Tasas</h2>
+      <p>Visualiza cómo han evolucionado las tasas a lo largo del tiempo</p>
+    </div>
+    <button id="export-csv" class="export-button">
+      Exportar CSV
+    </button>
+  </div>
+
+  <div class="price-history-card">
+    <div class="time-filter">
+      <button class="filter-btn active" data-filter="week">Última semana</button>
+      <button class="filter-btn" data-filter="month">Último mes</button>
+      <button class="filter-btn" data-filter="all">Todo</button>
+    </div>
+    
+    <div class="chart-container">
+      <canvas id="priceChart"></canvas>
+      <div id="loading">Cargando datos...</div>
+    </div>
+
+    <div class="chart-legend">
+      <div class="legend-item">
+        <span class="legend-color" style="background-color: #3B82F6;"></span>
+        <span>Precio</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background-color: #EF4444;"></span>
+        <span>Máximo</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background-color: #10B981;"></span>
+        <span>Promedio</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="current-price">
+    <div id="date-display"></div>
+    <div id="price-display"></div>
+  </div>
+</div>
+
+<script > 
+  import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend } from 'chart.js';
+  
+  // Register required Chart.js components
+  Chart.register(
+    LineController,
+    LineElement,
+    PointElement,
+    LinearScale,
+    CategoryScale,
+    Tooltip,
+    Legend
+  );
+
+  // Interfaces
+  interface HistoryItem {
+    last_update: string;
+    price: number;
+    price_high: number;
+    price_low: number;
+  }
+
+  interface ApiResponse {
+    datetime: {
+      date: string;
+      time: string;
+    };
+    history: HistoryItem[];
+  }
+
+  // Main function
+  document.addEventListener('DOMContentLoaded', async () => {
+    const apiUrl = 'https://pydolarve.org/api/v2/dollar/history?page=alcambio&monitor=enparalelovzla&start_date=01-01-2025&end_date=01-04-2025';
+    const apiToken = 'JhZZj99yQrGoTOGdpNpOvQ';
+    const loadingElement = document.getElementById('loading');
+    const dateDisplay = document.getElementById('date-display');
+    const priceDisplay = document.getElementById('price-display');
+    
+    let priceData: ApiResponse | null = null;
+    let chart: Chart | null = null;
+
+    try {
+      // Fetch data
+      loadingElement.textContent = 'Cargando datos...';
+      const response = await fetch(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${apiToken}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      
+      priceData = await response.json();
+      loadingElement.style.display = 'none';
+      
+      // Display current date and price
+      if (dateDisplay && priceDisplay && priceData.datetime && priceData.history.length > 0) {
+        dateDisplay.textContent = `${priceData.datetime.date} - ${priceData.datetime.time}`;
+        priceDisplay.textContent = `Precio actual: ${formatPrice(priceData.history[0].price)}`;
+      }
+      
+      // Initialize chart
+      initChart(priceData);
+      
+      // Setup filter buttons
+      setupFilters(priceData);
+      
+      // Setup export button
+      setupExport(priceData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      loadingElement.textContent = 'Error al cargar los datos. Intente nuevamente.';
+    }
+
+    // Initialize chart with data
+    function initChart(data: ApiResponse) {
+      if (!data || !data.history || data.history.length === 0) return;
+      
+      const ctx = document.getElementById('priceChart') as HTMLCanvasElement;
+      if (!ctx) return;
+      
+      // Process and reverse data to show oldest to newest
+      const historyData = [...data.history].reverse();
+      
+      const labels = historyData.map(item => {
+        // Format date from DD/MM/YYYY to simpler display
+        const dateParts = item.last_update.split(',')[0].split('/');
+        return `${dateParts[0]}/${dateParts[1]}`;
+      });
+      
+      const prices = historyData.map(item => item.price);
+      const highPrices = historyData.map(item => item.price_high);
+      const lowPrices = historyData.map(item => item.price_low);
+      
+      // Calculate average between high and low
+      const avgPrices = historyData.map(item => (item.price_high + item.price_low) / 2);
+      
+      const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+      const gridColor = isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+      const textColor = isDarkTheme ? '#ffffff' : '#111111';
+      
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Precio',
+              data: prices,
+              borderColor: '#3B82F6', // Primary blue
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              borderWidth: 2,
+              tension: 0.4,
+              pointRadius: 3,
+              pointHoverRadius: 5
+            },
+            {
+              label: 'Máximo',
+              data: highPrices,
+              borderColor: '#EF4444', // Red
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              borderWidth: 2,
+              tension: 0.4,
+              borderDash: [5, 5],
+              pointRadius: 2,
+              pointHoverRadius: 4
+            },
+            {
+              label: 'Promedio',
+              data: avgPrices,
+              borderColor: '#10B981', // Green
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              borderWidth: 2,
+              tension: 0.4,
+              pointRadius: 2,
+              pointHoverRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: isDarkTheme ? '#1e1e1e' : 'rgba(255, 255, 255, 0.9)',
+              titleColor: textColor,
+              bodyColor: textColor,
+              borderColor: isDarkTheme ? '#333' : '#ddd',
+              borderWidth: 1,
+              padding: 10,
+              displayColors: true,
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  if (context.parsed.y !== null) {
+                    label += formatPrice(context.parsed.y);
+                  }
+                  return label;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: gridColor
+              },
+              ticks: {
+                color: textColor,
+                maxRotation: 45,
+                minRotation: 45
+              }
+            },
+            y: {
+              grid: {
+                color: gridColor
+              },
+              ticks: {
+                color: textColor,
+                callback: function(value) {
+                  return formatPrice(value);
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      // Listen for theme changes to update chart
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'data-theme') {
+            updateChartTheme();
+          }
+        });
+      });
+      
+      observer.observe(document.documentElement, { attributes: true });
+      
+      function updateChartTheme() {
+        if (!chart) return;
+        
+        const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+        const gridColor = isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const textColor = isDarkTheme ? '#ffffff' : '#111111';
+        
+        chart.options.scales.x.grid.color = gridColor;
+        chart.options.scales.y.grid.color = gridColor;
+        chart.options.scales.x.ticks.color = textColor;
+        chart.options.scales.y.ticks.color = textColor;
+        
+        chart.options.plugins.tooltip.backgroundColor = isDarkTheme ? '#1e1e1e' : 'rgba(255, 255, 255, 0.9)';
+        chart.options.plugins.tooltip.titleColor = textColor;
+        chart.options.plugins.tooltip.bodyColor = textColor;
+        chart.options.plugins.tooltip.borderColor = isDarkTheme ? '#333' : '#ddd';
+        
+        chart.update();
+      }
+    }
+    
+    // Setup time period filters
+    function setupFilters(data: ApiResponse) {
+      if (!data || !data.history) return;
+      
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Remove active class from all buttons
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          
+          // Add active class to clicked button
+          button.classList.add('active');
+          
+          // Filter data based on selected period
+          const filter = button.getAttribute('data-filter');
+          updateChartData(filter, data);
+        });
+      });
+    }
+    
+    // Update chart with filtered data
+    function updateChartData(filter: string, data: ApiResponse) {
+      if (!chart || !data || !data.history) return;
+      
+      // Deep clone the history array to avoid modifying the original
+      let filteredData = [...data.history].reverse();
+      
+      // Apply time filter
+      if (filter === 'week') {
+        filteredData = filteredData.slice(-7); // Last 7 days
+      } else if (filter === 'month') {
+        filteredData = filteredData.slice(-30); // Last 30 days
+      }
+      
+      // Update chart data
+      const labels = filteredData.map(item => {
+        const dateParts = item.last_update.split(',')[0].split('/');
+        return `${dateParts[0]}/${dateParts[1]}`;
+      });
+      
+      const prices = filteredData.map(item => item.price);
+      const highPrices = filteredData.map(item => item.price_high);
+      const avgPrices = filteredData.map(item => (item.price_high + item.price_low) / 2);
+      
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = prices;
+      chart.data.datasets[1].data = highPrices;
+      chart.data.datasets[2].data = avgPrices;
+      
+      chart.update();
+    }
+    
+    // Setup CSV export
+    function setupExport(data: ApiResponse) {
+      const exportButton = document.getElementById('export-csv');
+      
+      if (exportButton && data && data.history) {
+        exportButton.addEventListener('click', () => {
+          // Create CSV content
+          let csvContent = 'data:text/csv;charset=utf-8,';
+          csvContent += 'Fecha,Precio,Precio Máximo,Precio Mínimo\n';
+          
+          data.history.forEach(item => {
+            csvContent += `${item.last_update},${item.price},${item.price_high},${item.price_low}\n`;
+          });
+          
+          // Create download link
+          const encodedUri = encodeURI(csvContent);
+          const link = document.createElement('a');
+          link.setAttribute('href', encodedUri);
+          link.setAttribute('download', `tasas-historico-${new Date().toISOString().split('T')[0]}.csv`);
+          document.body.appendChild(link);
+          
+          // Trigger download
+          link.click();
+          
+          // Clean up
+          document.body.removeChild(link);
+        });
+      }
+    }
+    
+    // Format price with decimal places and thousands separator
+    function formatPrice(price: number): string {
+      return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+  });
+</script>
+
+<style>
+  .price-history-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .price-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .price-history-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .price-history-header p {
+    margin: 0.5rem 0 0;
+    opacity: 0.8;
+  }
+
+  .export-button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--rounded);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+
+  .export-button:hover {
+    background-color: hsl(217 89% 45%);
+    transform: translateY(-1px);
+  }
+
+  .export-button:active {
+    transform: translateY(1px);
+  }
+
+  .price-history-card {
+    background-color: var(--bg-cards);
+    border-radius: var(--rounded);
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+  }
+
+  .time-filter {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    background-color: transparent;
+    border: 1px solid var(--color-borders);
+    padding: 0.5rem 1rem;
+    border-radius: var(--rounded);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .filter-btn.active {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .chart-container {
+    position: relative;
+    height: 350px;
+    margin-bottom: 1rem;
+  }
+
+  #loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    color: var(--font-color);
+    opacity: 0.7;
+  }
+
+  .chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .current-price {
+    background-color: var(--bg-cards);
+    border-radius: var(--rounded);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  #date-display {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  #price-display {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .price-history-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .chart-container {
+      height: 250px;
+    }
+
+    .current-price {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
