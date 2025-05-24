@@ -31,7 +31,7 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
       <button>$10</button> <button>$15</button> <button>$20</button> <button>$50</button> <button>$100</button>
     </div>
 
-    <div class="tasas">
+    <div id="tasas">
       <strong>Tasa a utilizar</strong>
       <ul class="rowTasas">
         <li data-text="bcv" class="active-rate" onclick="calculateRates(this)" >bcv <span class="tasa">0</span></li>
@@ -50,32 +50,29 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
   max-width: 500px;
   min-width: 290px;
   margin: auto;
-  padding: 15px;
+  padding: 0 15px;
 }
 
 .containerAmountInput input,
 .containerAmountInput button:not(#btnToggleCurrency) {
-  border: 1px solid var(--color-borders);
-  border-radius: 5px;
   padding: 10px;
 }
 
 .containerAmountInput input {
   width: 100%;
   padding-right: 51px;
-  border-radius: 8px;
   margin-bottom: 10px;
 }
 
 .containerAmountInput #btnToggleCurrency {
   position: absolute;
   right: 1.5px;
-  top: 27px;
+  top: 26px;
   width: 50px;
   background: transparent;
   border: none;
   border-left: 1px solid var(--color-borders);
-  border-radius: 0 7px 7px 0;
+  border-radius: 0;
   cursor: pointer;
 }
 
@@ -84,7 +81,6 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
   position: relative;
 }
 
@@ -111,7 +107,9 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
   opacity: 1;
   font-weight: bold;
 }
-
+#tasas{
+  margin: 12px auto;
+}
 .rowTasas {
   list-style: none;
   padding: 0;
@@ -119,7 +117,6 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
 }
 
 .rowTasas li {
-  margin-bottom: 8px;
   display: flex;
   align-items: center;
   padding: 7px ;
@@ -137,7 +134,7 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
   border-radius: 10px;
   padding: 15px;
   text-align: center;
-  margin-top: 20px;
+  margin: 12px 0;
 }
 
 .resultado small {
@@ -165,8 +162,8 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
 }
 .active-rate{
   background-color: var(--bg-cards);
-  border: 2px solid var(--color-borders);
-  border-radius: 5px;
+  border: 1px solid var(--color-borders);
+  border-radius: var(--rounded);
 }
 </style>
 

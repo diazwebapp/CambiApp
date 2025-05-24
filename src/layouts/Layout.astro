@@ -57,6 +57,7 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
     --secondary: hsl(217.2 32.6% 17.5%);
     --success: hsl(123, 91%, 46%);
     --danger: hsl(9, 91%, 46%);
+    --rounded:.65rem;
   }
   [data-theme="dark"] {
     --bg-app: #000000;
@@ -91,21 +92,34 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
     display: inline;
   }
   input,button, option, select {
-    border: 2px solid var(--color-borders);
+    border: 1px solid var(--color-borders);
     background-color: var(--bg-app);
     padding: 10px;
     outline: none;
-    border-radius: 7px;
+    border-radius: var(--rounded);
   }
+  select{
+    width: 100%;
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+  select::after {
+  content: "▼";
+  position: absolute;
+  right: 15px; /* Ajusta este valor para mover la flecha */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Permite hacer clic en el select */
+}
   button{
     cursor: pointer;
   }
   input:focus,button:focus{
     border-color: var(--font-color);
   }
-  label{
-    color: var(--font-color);
-  }
+  
   html {
     background-color: var(--bg-app);
   }
