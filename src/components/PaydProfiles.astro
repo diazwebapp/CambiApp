@@ -238,15 +238,8 @@
                 if (!profile.id) {
                     throw new Error("El perfil debe tener un ID único");
                 }
-
-                // Leer y validar datos existentes
-                const profiles = getSavedProfiles(); // Función segura que usa try-catch
-                if (profiles.some((p) => p.id === profile.id)) {
-                    console.warn("Perfil duplicado, no se guardará");
-                    return false;
-                }
-
-                // Guardar
+                const profiles = JSON.parse(localStorage.getItem("paymentProfiles")) || [];
+                if(profiles.length < 1) profile.selected = "si"
                 profiles.push(profile);
                 localStorage.setItem(
                     "paymentProfiles",
@@ -263,14 +256,16 @@
         function loadProfiles(
             params = { deleteID: false, createProfile: false },
         ) {
-            const profiles =
-                JSON.parse(localStorage.getItem("paymentProfiles")) || [];
-            //console.log(profiles)
+            const profiles = JSON.parse(localStorage.getItem("paymentProfiles")) || [];
 
             if (params.createProfile) {
                 const option = document.createElement("option");
                 option.value = params.createProfile.id; // Puedes usar el ID como valor
                 option.textContent = `${params.createProfile.name} - ${params.createProfile.bank}`;
+                
+                if(profiles.length === 1){
+                    option.selected = true;
+                }
                 profileSelect.appendChild(option);
             }
             if (params.deleteID) {
@@ -302,12 +297,13 @@
         // Función para copiar los datos del perfil al portapapeles
         function copyProfileData() {
             const profileId = parseInt(profileSelect.value);
-            const profiles =
-                JSON.parse(localStorage.getItem("paymentProfiles")) || [];
+            const profiles = JSON.parse(localStorage.getItem("paymentProfiles")) || [];
             const profile = profiles.find((p) => p.id === profileId);
-
+            const resultValue = document.getElementById("resultValue")
             if (profile) {
+
                 const textToCopy = `
+                Monto: ${resultValue.textContent.trim()}
                 Nombre: ${profile.name}
                 Cédula: ${profile.idNumber}
                 Teléfono: ${profile.phone}
