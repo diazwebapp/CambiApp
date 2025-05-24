@@ -219,14 +219,11 @@
                 return false;
             }
 
-            // 5. Validar banco (no vacío y sin caracteres extraños)
-            if (!/^[a-zA-Z0-9\s\-]+$/.test(bank)) {
-                alert("¡Nombre del banco no válido!");
-                return false;
-            }
-            if(!/^[0-9]+$/.test(normalizedAccount)){
+            if(accountNumber){
+                if(!/^[0-9]+$/.test(accountNumber)){
                 alert("¡Ingresa un número de cuenta valido!");
                 return false;
+            }
             }
             // Si todo está correcto
             return true;
