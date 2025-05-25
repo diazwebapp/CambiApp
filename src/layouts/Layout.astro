@@ -3,10 +3,11 @@ import { ClientRouter } from "astro:transitions";
 import BackLink from "../components/BackLink.astro";
 export interface Props {
   title?: String;
-  backBtn?:Boolean
+  backBtn?:Boolean;
+  menu?:Boolean;
 }
 
-const { title = "CambiApp", backBtn=false } = Astro.props;
+const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
 ---
 
 <!doctype html>
@@ -28,14 +29,24 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
   </head>
   <body>
     <header>
+      {backBtn?(<BackLink/>):(
+        <button class="hamburger-menu" aria-label="Abrir menú de navegación">
+              <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+      )}
+      <strong>{title}</strong>
     <nav class="app-nav">
-      {backBtn?(<BackLink/>):null}
-      <h1>{title}</h1>
-      <button id="theme-toggle" aria-label="Cambiar tema">
+      <ul>
+        <li><a href="/">Calculadora</a></li>
+        <li><a href="/history">historial</a></li>
+      </ul>
+    </nav>
+    <button id="theme-toggle" aria-label="Cambiar tema">
           <span class="light-icon">☀️</span>
           <span class="dark-icon">🌙</span>
       </button>
-    </nav>
   </header>
 
     <main>
@@ -126,21 +137,6 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
   p {
     line-height: 1.5;
   }
-  .app-nav {
-    width: 100%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-around;
-    align-items: center;
-  }
-  .app-nav a {
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-  }
-  .app-nav a strong {
-    margin-right: 5px;
-  }
   footer,header,main {
     padding: 5px 2% 5px 2%;
   }
@@ -150,7 +146,121 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
     background-color: var(--bg-app);
     z-index: 2;
     width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
   }
+  /* Botón de Hamburguesa */
+.hamburger-menu {
+    display: flex; /* Para centrar las barras */
+    flex-direction: column; /* Apila las barras verticalmente */
+    justify-content: space-around; /* Espacio entre las barras */
+    width: 30px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 4; /* Asegura que esté por encima del menú */
+}
+
+.hamburger-menu .bar {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: var(--font-color);
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out; /* Transición para el efecto de cerrar */
+}
+
+/* Estilos para el ícono de cerrar (cuando el menú está abierto) */
+.hamburger-menu.active .bar:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger-menu.active .bar:nth-child(2) {
+    opacity: 0; /* Oculta la barra del medio */
+}
+
+.hamburger-menu.active .bar:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+}
+/* Menú de Navegación */
+.app-nav {
+    /* Por defecto, oculto y fuera de la pantalla en móviles */
+    position: absolute;
+    top: 100%; /* Justo debajo del header */
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-cards); /* Color de fondo del menú desplegado */
+    transform: translateX(-100%); /* Oculto a la izquierda */
+    transition: transform 0.3s ease-in-out;
+    z-index: 3; /* Debajo del botón hamburguesa */
+    height: auto; /* Ajusta la altura al contenido */
+    overflow: hidden; /* Evita barras de desplazamiento si el contenido es largo */
+}
+
+.app-nav.active {
+    transform: translateX(0); /* Muestra el menú deslizándose */
+}
+
+.app-nav ul {
+    list-style: none;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.app-nav ul li {
+    margin: 10px 0;
+}
+
+.app-nav ul li a {
+    color: var(--font-color);
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block; /* Para que todo el área del li sea clicable */
+    transition: background-color 0.2s ease;
+}
+
+.app-nav ul li a:hover,
+.app-nav ul li a.active-link { /* active-link para resaltar la página actual */
+    background-color: var(--bg-cards);
+}
+/* Media Query para pantallas grandes (Desktop First a partir de aquí) */
+@media (min-width: 768px) {
+    .hamburger-menu {
+        display: none; /* Oculta el botón de hamburguesa en pantallas grandes */
+    }
+
+    .app-nav {
+        position: static; /* Quita el posicionamiento absoluto */
+        transform: translateX(0); /* Asegura que siempre esté visible */
+        width: auto;
+        background-color: transparent; /* Fondo transparente en desktop */
+        box-shadow: none;
+        display: block !important; /* Asegura que el menú sea visible si JS lo oculta */
+    }
+
+    .app-nav ul {
+        display: flex; /* Los elementos se alinean horizontalmente */
+        padding: 0;
+    }
+
+    .app-nav ul li {
+        margin: 0 15px; /* Espacio entre los elementos */
+    }
+
+    .app-nav ul li a {
+        padding: 5px 0; /* Ajusta el padding para desktop */
+        color: var(--font-color); /* Vuelve a color blanco en desktop */
+        background-color: transparent;
+    }
+
+    .app-nav ul li a:hover {
+       background-color: transparent;
+    }
+}
   body{
     padding-top: 60px;
   }
@@ -190,6 +300,30 @@ const { title = "CambiApp", backBtn=false } = Astro.props;
       document.documentElement.setAttribute("data-theme", newTheme);
       localStorage.setItem("theme", newTheme);
     });
+
+
+     const hamburgerMenu = document.querySelector('.hamburger-menu');
+    const navMenu = document.querySelector('.app-nav');
+
+    if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            hamburgerMenu.classList.toggle('active'); // Para animar el icono de hamburguesa
+        });
+
+        // Opcional: Cerrar el menú al hacer clic en un enlace (para SPA o scroll)
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) { // Solo si estamos en vista móvil
+                    navMenu.classList.remove('active');
+                    hamburgerMenu.classList.remove('active');
+                }
+            });
+        });
+    } else {
+        console.error("No se encontraron los elementos '.hamburger-menu' o '.nav-menu'.");
+    }
+
 
   });
 </script>

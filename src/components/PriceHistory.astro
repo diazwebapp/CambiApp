@@ -146,6 +146,7 @@ const {
       
       // Combine and process data
       if (bcvData.history && parallelData.history) {
+        
         // We need to match dates between both datasets
         const bcvHistory = [...bcvData.history];
         const parallelHistory = [...parallelData.history];
@@ -153,17 +154,17 @@ const {
         // Find common dates
         const commonDates = new Set();
         
-        // Add BCV dates
-        bcvHistory.forEach(item => {
-          const date = item.last_update.split(',')[0];
-          commonDates.add(date);
-        });
-        
-        // Add Parallel dates
-        parallelHistory.forEach(item => {
-          const date = item.last_update.split(',')[0];
-          commonDates.add(date);
-        });
+        // Para bcvHistory
+          for (const item of bcvHistory) {
+            const date = item.last_update.split(',')[0];
+            commonDates.add(date);
+          }
+
+          // Para parallelHistory
+          for (const item of parallelHistory) {
+            const date = item.last_update.split(',')[0];
+            commonDates.add(date);
+          }
         
         // Create combined dataset
         combinedData = Array.from(commonDates).map(date => {
@@ -180,6 +181,7 @@ const {
             timestamp: new Date(date.split('/').reverse().join('-')).getTime()
           };
         }).filter(item => item.bcv_price !== null && item.parallel_price !== null);
+        
         
         // Sort combined data by date (ascending)
         combinedData.sort((a, b) => a.timestamp - b.timestamp);
