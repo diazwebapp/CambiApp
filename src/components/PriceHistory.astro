@@ -64,8 +64,9 @@ const {
 
 
 <script>
+    
   import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend } from 'chart.js';
-  
+  document.addEventListener('astro:page-load', async () => {
   // Register required Chart.js components
   Chart.register(
     LineController,
@@ -94,7 +95,7 @@ const {
   }
 
   // Main function
-  document.addEventListener('DOMContentLoaded', async () => {
+
     const fecha = new Date();
     const fechaFormateada = fecha.toLocaleDateString('es-ES', {
       day: '2-digit',
@@ -111,6 +112,8 @@ const {
     let parallelData: ApiResponse | null = null;
     let combinedData: any[] = [];
     let chart: Chart | null = null;
+if(loadingElement && dateDisplay && priceDisplay){
+
 
     try {
       // Fetch data from both monitors
@@ -212,7 +215,7 @@ const {
       console.error('Error fetching data:', error);
       loadingElement.textContent = 'Error al cargar los datos. Intente nuevamente.';
     }
-
+}
     // Initialize chart with data
     function initChart(data: typeof combinedData) {
       if (!data || data.length === 0) return;

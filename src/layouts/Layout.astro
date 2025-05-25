@@ -266,8 +266,8 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
   }
 </style>
 
-<script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
+<script>
+  document.addEventListener("astro:page-load", () => {
     const themeToggle = document.getElementById("theme-toggle");
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -320,9 +320,7 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
                 }
             });
         });
-    } else {
-        console.error("No se encontraron los elementos '.hamburger-menu' o '.nav-menu'.");
-    }
+    } 
 
 
   });

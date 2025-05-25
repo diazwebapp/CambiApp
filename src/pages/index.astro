@@ -34,9 +34,9 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
     <div id="tasas">
       <strong>Tasa a utilizar</strong>
       <ul class="rowTasas">
-        <li data-text="bcv" class="active-rate" onclick="calculateRates(this)" >bcv <span class="tasa">0</span></li>
-        <li data-text="paralelo" class="active-rate" onclick="calculateRates(this)">Paralelo <span class="tasa">(0)</span></li>
-        <li data-text="promedio" class="active-rate" onclick="calculateRates(this)">Promedio <span class="tasa">(0)</span></li>
+        <li data-text="bcv" class="active-rate" >bcv <span class="tasa">0</span></li>
+        <li data-text="paralelo" class="active-rate" >Paralelo <span class="tasa">(0)</span></li>
+        <li data-text="promedio" class="active-rate" >Promedio <span class="tasa">(0)</span></li>
       </ul>
     </div>
 
@@ -167,7 +167,7 @@ const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=de
 }
 </style>
 
-<script is:inline >
+<script>
   // Constantes y configuración
 const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
 const MIN_API_CALL_INTERVAL = 5000; // 5 segundos entre llamadas
@@ -186,8 +186,12 @@ const state = {
   selectedRate: "promedio"
 };
 // Cache de elementos DOM
-const elements = {
-  typeConversionInfo: document.getElementById("typeConversionInfo"),
+let elements = {};
+
+// Inicialización
+document.addEventListener("astro:page-load", () => {
+  elements = {
+     typeConversionInfo: document.getElementById("typeConversionInfo"),
   btnToggleCurrency: document.getElementById("btnToggleCurrency"),
   currencyRadios: document.querySelectorAll('input[name="currency"]'),
   amountInput: document.getElementById("amountInput"),
@@ -199,11 +203,7 @@ const elements = {
     paralelo: document.querySelector(".rowTasas li:nth-child(2) .tasa"),
     promedio: document.querySelector(".rowTasas li:nth-child(3) .tasa")
   },
-  
-};
-
-// Inicialización
-document.addEventListener("DOMContentLoaded", () => {
+  }
   setupEventListeners();
   initializeApp();
 });
@@ -211,14 +211,14 @@ document.addEventListener("DOMContentLoaded", () => {
 // Configuración de event listeners
 function setupEventListeners() {
   // Delegación de eventos para mejor performance
-  document.getElementById("typeCurrency").addEventListener("change", (e) => {
+  document.getElementById("typeCurrency")?.addEventListener("change", (e) => {
     if (e.target.matches('input[name="currency"]')) {
       handleCurrencyChange(e.target.value);
     }
   });
 
-  elements.btnToggleCurrency.addEventListener("click", toggleCurrency);
-  elements.amountInput.addEventListener("input", debounce(calculateRates, 500));
+  elements.btnToggleCurrency?.addEventListener("click", toggleCurrency);
+  elements.amountInput?.addEventListener("input", debounce(calculateRates, 500));
 
   // Botones de monto rápido
   document.querySelectorAll(".containerAmountInput button:not(#btnToggleCurrency)").forEach(btn => {
@@ -227,6 +227,11 @@ function setupEventListeners() {
       calculateRates();
     });
   });
+  if(elements.containerTasas){
+    for (const li of elements.containerTasas) {
+      li.addEventListener('click',()=>{calculateRates(li)})
+    }
+  }
 }
 
 // Inicializar la aplicación
@@ -402,7 +407,7 @@ function updateCurrencyUI() {
 }
 
 // Calcular tasas con debounce
-const calculateRates = debounce(function(e) {
+const calculateRates = debounce(function(e:HTMLElement) {
   
   let result, amount;
 
@@ -424,6 +429,7 @@ const calculateRates = debounce(function(e) {
   modifyClass(state.selectedRate)
   
 }, 300);
+
 //Funcion para añadir manejar clases de los <li> en .rowTasas
   function modifyClass(selectedRate) {
     // Remover clase activa de todos los <li>
@@ -462,7 +468,7 @@ function showError(message) {
   const existingError = document.querySelector('.error-message');
   if (existingError) existingError.remove();
   
-  document.querySelector('.calcApp').appendChild(errorElement);
+  document.querySelector('.calcApp')?.appendChild(errorElement);
   setTimeout(() => errorElement.remove(), 5000);
 }
 </script>

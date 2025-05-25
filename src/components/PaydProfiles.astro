@@ -90,7 +90,7 @@
     </div>
 </div>
 
-<style is:inline scoped>
+<style is:inline>
     #profilesModule {
         max-width: 500px;
         padding: 0px 15px;
@@ -146,31 +146,36 @@
     }
 </style>
 
-<script is:inline>
-    document.addEventListener("DOMContentLoaded", function () {
+<script>
+    document.addEventListener("astro:page-load", function () {
         const form = document.getElementById("paymentProfileForm");
         const profileSelect = document.getElementById("profile-select");
         const copyBtn = document.getElementById("copy-btn");
-        copyBtn.addEventListener("click", copyProfileData);
+        copyBtn?.addEventListener("click", copyProfileData);
         const deleteBtn = document.getElementById("delete-btn");
-        deleteBtn.addEventListener("click", deleteProfile);
-        profileSelect.addEventListener("change", handleProfile);
+        deleteBtn?.addEventListener("click", deleteProfile);
+        profileSelect?.addEventListener("change", handleProfile);
 
         // Cargar perfiles guardados al iniciar
         loadProfiles();
 
         // Manejar el envío del formulario
-        form.addEventListener("submit", function (e) {
+        form?.addEventListener("submit", function (e) {
             e.preventDefault();
             if (validateForm()) {
                 // Si la validación es exitosa, guardar el perfil
+               const name= document.getElementById("name")
+                const    idNumber= document.getElementById("idNumber")
+                const    phone= document.getElementById("phone")
+                const    bank= document.getElementById("bank")
+                const    accountNumber= document.getElementById("accountNumber")
                 const newProfile = {
                     id: Date.now(),
-                    name: document.getElementById("name").value.trim(),
-                    idNumber: document.getElementById("idNumber").value.trim(),
-                    phone: document.getElementById("phone").value.trim(),
-                    bank: document.getElementById("bank").value.trim(),
-                    accountNumber: document.getElementById("accountNumber").value.trim(),
+                    name: name?.value.trim(),
+                    idNumber: idNumber?.value.trim(),
+                    phone: phone?.value.trim(),
+                    bank: bank?.value.trim(),
+                    accountNumber: accountNumber?.value.trim(),
                     selected: "no",
                 };
                 // Guardar + actualizar UI de forma óptima
@@ -266,11 +271,11 @@
                 if(profiles.length === 1){
                     option.selected = true;
                 }
-                profileSelect.appendChild(option);
+                profileSelect?.appendChild(option);
             }
             if (params.deleteID) {
                 // Recargar la lista
-                const optionToRemove = profileSelect.querySelector(
+                const optionToRemove = profileSelect?.querySelector(
                     `option[value="${params.deleteID}"]`,
                 );
                 if (optionToRemove) {
@@ -289,7 +294,7 @@
                     if (profile.selected === "si") {
                         option.selected = true;
                     }
-                    profileSelect.appendChild(option);
+                    profileSelect?.appendChild(option);
                 }
             }
         }
