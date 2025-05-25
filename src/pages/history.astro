@@ -6,11 +6,10 @@ import PriceHistory from '../components/PriceHistory.astro';
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout title="Historial" >
+<Layout title="Histórico de Tasas" >
   <div class="price-history-container" aria-label="Historial de tasas de cambio"></div>
     <div class="price-history-header">
       <div>
-        <h2 id="price-history-heading">Histórico de Tasas</h2>
         <p aria-describedby="price-history-heading">Visualiza cómo han evolucionado las tasas a lo largo del tiempo</p>
       </div>
       <button id="export-csv" class="export-button" aria-label="Exportar datos a formato CSV" title="Exportar a CSV">
@@ -35,13 +34,6 @@ import PriceHistory from '../components/PriceHistory.astro';
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     gap: 1rem;
-  }
-
-  .price-history-header h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-    line-height: 1.2;
   }
 
   .price-history-header p {

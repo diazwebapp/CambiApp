@@ -29,14 +29,14 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
   </head>
   <body>
     <header>
-      {backBtn?(<BackLink/>):(
-        <button class="hamburger-menu" aria-label="Abrir menú de navegación">
-              <span class="bar"></span>
+      
+      <button class="hamburger-menu" aria-label="Abrir menú de navegación">
             <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
-      )}
-      <strong>{title}</strong>
+          <span class="bar"></span>
+          <span class="bar"></span>
+      </button>
+      
+      <h1>{title}</h1>
     <nav class="app-nav">
       <ul>
         <li><a href="/">Calculadora</a></li>
@@ -150,6 +150,9 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
+  }
+  header h1{
+    font-size: .9rem;
   }
   /* Botón de Hamburguesa */
 .hamburger-menu {
