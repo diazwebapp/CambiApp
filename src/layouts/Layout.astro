@@ -60,20 +60,20 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
 </html>
 <style is:global>
   :root {
-    --bg-app: hsl(0, 0%, 94%);
-    --color-borders: hsl(0, 0%, 37%);
-    --font-color: hsl(0, 0%, 11%);
-    --bg-cards:hsl(0, 1%, 85%);
-    --primary: hsl(217 89% 50%);
-    --secondary: hsl(217.2 32.6% 17.5%);
+    --bg-app: rgb(240, 240, 240);
+    --color-borders: rgb(211, 210, 210);
+    --font-color: rgb(28, 28, 28);
+    --bg-cards:rgb(231, 230, 230);
+    --primary: rgb(3 105 161);
+    --secondary: rgb(70, 69, 69);
     --success: hsl(123, 91%, 46%);
-    --danger: hsl(9, 91%, 46%);
-    --rounded:.65rem;
+    --danger: rgb(224, 43, 11);
+    --rounded:.37rem;
   }
   [data-theme="dark"] {
-    --bg-app: #000000;
-    --font-color: #ffffff;
-    --bg-cards:#1e1e1e;
+    --bg-app: rgb(0, 0, 0);
+    --font-color: rgb(255, 255, 255);
+    --bg-cards:rgb(30, 30, 30);
   }
   * {
     margin: 0;
@@ -87,7 +87,6 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
       "Segoe UI Emoji",
       Segoe UI Symbol,
       "Noto Color Emoji";
-    font-weight: 500;
     -webkit-font-smoothing: antialiased;
     color: var(--font-color);
   }
@@ -140,6 +139,10 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
   footer,header,main {
     padding: 5px 2% 5px 2%;
   }
+  main,.container{
+    max-width: 1366px;
+    margin: auto;
+  }
   header{
     position: fixed;
     top:0;
@@ -152,7 +155,7 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
     justify-content: space-between;
   }
   header h1{
-    font-size: .9rem;
+    font-size: 1.5rem;
   }
   /* Botón de Hamburguesa */
 .hamburger-menu {

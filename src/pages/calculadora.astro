@@ -1,0 +1,260 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Calculadora" >
+    <div id="calApp">
+        <div id="exchange-rates-container">
+        <div id="bcv" class="exchange-rate-card">
+            <div class="card-header">
+            <h3 class="card-title">Tasa bcv</h3>
+            <span class="change-indicator-up">0.0%</span>
+            </div>
+            <p class="rate-value">0.0 Bs/$</p>
+            <button class="use-rate-button secondary-button">Usar esta tasa</button>
+        </div>
+        <div id="promedio" class="exchange-rate-card">
+            <div class="card-header">
+            <h3 class="card-title">Tasa promedio</h3>
+            <span class="change-indicator-up">0.0%</span>
+            </div>
+            <p class="rate-value">0.0 Bs/$</p>
+            <button class="use-rate-button secondary-button">Usar esta tasa</button>
+        </div>
+        <div id="paralelo" class="exchange-rate-card">
+            <div class="card-header">
+            <h3 class="card-title">Tasa paralelo</h3>
+            <span class="change-indicator-up">0.0%</span>
+            </div>
+            <p class="rate-value">0.0 Bs/$</p>
+            <button class="use-rate-button primary-button">Usar esta tasa</button>
+        </div>
+</div>
+
+
+
+        
+        <div id="containerInputs" role="group" aria-labelledby="inputGroupHeading">
+            <strong>Monto en dolares</strong>
+            <div class="inputGroup">
+                <label for="usd">$</label>
+                <input type="number" step="0.01" id="usd" aria-label="Introducir monto en Dólares Americanos" placeholder="100" value="100">
+            </div>
+            <strong>Monto en bolivares</strong>
+            <div class="inputGroup">
+                <label for="bs">Bs</label>
+                <input type="number" step="0.01" id="bs" aria-label="Introducir monto en Bolívares Soberanos" placeholder="100" >
+            </div>
+        </div>
+    </div>
+
+</Layout>
+<script>
+
+const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
+    const state={
+        currentTasa:"paralelo",
+        tasas:{  
+        bcv:{
+            change: 0.06,
+            color: "green",
+            image: "https://res.cloudinary.com/dcpyfqx87/image/upload/v1729921478/monitors/public_id:bcv.webp",
+            last_update: "26/05/2025, 12:00 AM",
+            percent: 0.06,
+            price: 95.08,
+            price_old: 95.02,
+            symbol: "▲",
+            title: "BCV"
+        },
+            promedio:{
+                image: "https://cdn-icons-png.flaticon.com/512/11037/11037237.png",
+                price: 95.08,
+                title: "Promedio"
+            },
+            paralelo:{
+            change: 0.06,
+            color: "green",
+            image: "https://res.cloudinary.com/dcpyfqx87/image/upload/v1729921479/monitors/public_id:epv.webp",
+            last_update: "26/05/2025, 12:00 AM",
+            percent: 0.06,
+            price: 95.08,
+            price_old: 95.02,
+            symbol: "▲",
+            title: "Paralelo"
+        }
+            
+        },
+        resultado:0
+    }
+ 
+    const dom: {
+        bsInput:HTMLInputElement | null
+        usdInput:HTMLInputElement | null
+        bcvCard:any
+        promedioCard:any
+        paraleloCard:any
+    }={
+        bsInput: null,
+        usdInput:null,
+        bcvCard: null,
+        promedioCard: null,
+        paraleloCard: null
+    }
+   
+    document.addEventListener("astro:page-load",async()=>{
+        //Obtener inputs del DOM
+        const usdInput = document.getElementById("usd")
+        const bsInput = document.getElementById("bs")
+        if(usdInput instanceof HTMLInputElement) dom.usdInput = usdInput
+        if(bsInput instanceof HTMLInputElement) dom.bsInput = bsInput
+        //Obtener tarjetas de tasas del DOM
+        const cards = document.getElementsByClassName("rate-value");
+        if (cards && cards.length > 0) {
+            dom.bcvCard = cards[0]
+            dom.promedioCard = cards[1]
+            dom.paraleloCard = cards[2]
+        }
+        
+        ////Añadir Listeners
+        addListeners()
+        fetchRates()
+        calculateRates(null)
+        
+    })
+
+   const addListeners = ():void=>{
+    dom.usdInput?.addEventListener("keyup",()=>calculateRates(null))
+    dom.bsInput?.addEventListener("keyup",()=>calculateRates(dom.usdInput))
+    
+   }
+   const calculateRates = (resultInput:HTMLInputElement | null):void=>{
+    state.tasas.promedio.price = parseFloat(((state.tasas.bcv.price + state.tasas.paralelo.price) / 2).toFixed(2))
+    if(resultInput){ //si no hay un input, se asume que el estan escribiendo bs
+        const monto = dom.bsInput? parseFloat(dom.bsInput.value) : 0
+        const result = monto / state.tasas[state.currentTasa as keyof typeof state.tasas].price
+        
+        if(dom.bsInput){
+            resultInput.value = isNaN(result) ? "0" : result.toFixed(2);
+        }
+        return
+    }
+
+    const monto = dom.usdInput? parseFloat(dom.usdInput.value) : 0
+    const result = monto * state.tasas[state.currentTasa as keyof typeof state.tasas].price
+    
+    if(dom.bsInput){
+        dom.bsInput.value = isNaN(result) ? "0" : result.toFixed(2);
+    }
+    
+   }
+
+   const updateUI = ()=>{
+        dom.bcvCard.textContent = state.tasas.bcv.price+ " Bs/$"
+        dom.promedioCard.textContent = state.tasas.promedio.price+ " Bs/$"
+        dom.paraleloCard.textContent = state.tasas.paralelo.price+ " Bs/$"
+   }
+
+   const fetchRates = async()=>{
+    try {
+        const req = await fetch(API_URL,{
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        Authorization: 'Bearer JhZZj99yQrGoTOGdpNpOvQ'
+      }
+    })
+        if(!req.ok) return false
+        const res = await req.json()
+        state.tasas.bcv.price = res.monitors.bcv.price
+        state.tasas.paralelo.price= res.monitors.enparalelovzla.price
+        calculateRates(null)
+        updateUI()
+    } catch (error) {
+        console.error("reintentando en 2s... "+error)
+        setTimeout(fetchRates,2000)
+    }
+   }
+</script>
+
+<style is:inline >
+    #bs,#usd{
+        padding-left: 32px;
+        width: 100%;
+        position: relative;
+        font-size: 100%;
+    }
+    #containerInputs .inputGroup{position: relative; margin: 5px 0;}
+    #containerInputs label{
+        position: absolute;
+        z-index: 2;
+        opacity: .8;
+        top:11px;
+        left: 11px;
+        font-size: 100%;
+        font-weight: 450;
+    }
+    /*/////////css de arriba//////////*/
+      #exchange-rates-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    #exchange-rates-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .exchange-rate-card {
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px var(--color-borders);
+    padding: 1rem;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-title {
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  .change-indicator-up {
+    color: var(--success);
+  }
+
+  .change-indicator-down {
+    color: var(--danger);
+  }
+
+  .rate-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .use-rate-button {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    border: none;
+    color:var(--secondary)
+  }
+
+  .secondary-button:hover {
+    background-color: var(--bg-cards);
+  }
+
+  .primary-button {
+    background-color: var(--primary); /* Assuming a primary blue, adjust as needed */
+    color: #ffffff;
+  }
+
+</style>

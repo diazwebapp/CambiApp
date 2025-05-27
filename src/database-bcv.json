@@ -1,0 +1,1124 @@
+{
+  "datetime": {
+    "date": "lunes, 26 de mayo de 2025",
+    "time": "7:24:04 p. m."
+  },
+  "history": [
+    {
+      "last_update": "26/05/2025, 12:00 AM",
+      "price": 95.08,
+      "price_high": 95.08,
+      "price_low": 95.08
+    },
+    {
+      "last_update": "23/05/2025, 12:25 AM",
+      "price": 95.02,
+      "price_high": 95.02,
+      "price_low": 95.02
+    },
+    {
+      "last_update": "22/05/2025, 12:04 AM",
+      "price": 94.97,
+      "price_high": 94.97,
+      "price_low": 94.97
+    },
+    {
+      "last_update": "21/05/2025, 12:53 AM",
+      "price": 94.86,
+      "price_high": 94.86,
+      "price_low": 94.86
+    },
+    {
+      "last_update": "20/05/2025, 12:53 AM",
+      "price": 94.8,
+      "price_high": 94.8,
+      "price_low": 94.8
+    },
+    {
+      "last_update": "19/05/2025, 12:23 AM",
+      "price": 94.76,
+      "price_high": 94.76,
+      "price_low": 94.76
+    },
+    {
+      "last_update": "16/05/2025, 12:29 AM",
+      "price": 94.32,
+      "price_high": 94.32,
+      "price_low": 94.32
+    },
+    {
+      "last_update": "15/05/2025, 12:21 AM",
+      "price": 94.16,
+      "price_high": 94.16,
+      "price_low": 94.16
+    },
+    {
+      "last_update": "14/05/2025, 12:53 AM",
+      "price": 93.58,
+      "price_high": 93.58,
+      "price_low": 93.58
+    },
+    {
+      "last_update": "13/05/2025, 02:18 PM",
+      "price": 93.06,
+      "price_high": 93.06,
+      "price_low": 93.06
+    },
+    {
+      "last_update": "12/05/2025, 12:21 AM",
+      "price": 93.05,
+      "price_high": 93.05,
+      "price_low": 93.05
+    },
+    {
+      "last_update": "09/05/2025, 12:11 AM",
+      "price": 92.83,
+      "price_high": 92.83,
+      "price_low": 92.83
+    },
+    {
+      "last_update": "08/05/2025, 12:12 AM",
+      "price": 91.92,
+      "price_high": 91.92,
+      "price_low": 91.92
+    },
+    {
+      "last_update": "07/05/2025, 12:49 AM",
+      "price": 91.21,
+      "price_high": 91.21,
+      "price_low": 91.21
+    },
+    {
+      "last_update": "06/05/2025, 12:00 AM",
+      "price": 88.72,
+      "price_high": 88.72,
+      "price_low": 88.72
+    },
+    {
+      "last_update": "05/05/2025, 12:07 AM",
+      "price": 88.64,
+      "price_high": 88.64,
+      "price_low": 88.64
+    },
+    {
+      "last_update": "02/05/2025, 12:22 AM",
+      "price": 87.57,
+      "price_high": 87.57,
+      "price_low": 87.57
+    },
+    {
+      "last_update": "30/04/2025, 12:42 AM",
+      "price": 86.85,
+      "price_high": 86.85,
+      "price_low": 86.85
+    },
+    {
+      "last_update": "29/04/2025, 12:03 AM",
+      "price": 86.66,
+      "price_high": 86.66,
+      "price_low": 86.66
+    },
+    {
+      "last_update": "28/04/2025, 12:35 AM",
+      "price": 86.11,
+      "price_high": 86.11,
+      "price_low": 86.11
+    },
+    {
+      "last_update": "25/04/2025, 12:33 AM",
+      "price": 84.42,
+      "price_high": 84.42,
+      "price_low": 84.42
+    },
+    {
+      "last_update": "24/04/2025, 12:56 AM",
+      "price": 83.42,
+      "price_high": 83.42,
+      "price_low": 83.42
+    },
+    {
+      "last_update": "23/04/2025, 12:00 AM",
+      "price": 82.38,
+      "price_high": 82.38,
+      "price_low": 82.38
+    },
+    {
+      "last_update": "22/04/2025, 12:57 AM",
+      "price": 81.76,
+      "price_high": 81.76,
+      "price_low": 81.76
+    },
+    {
+      "last_update": "21/04/2025, 12:18 AM",
+      "price": 80.96,
+      "price_high": 80.96,
+      "price_low": 80.96
+    },
+    {
+      "last_update": "16/04/2025, 12:39 AM",
+      "price": 79.78,
+      "price_high": 79.78,
+      "price_low": 79.78
+    },
+    {
+      "last_update": "15/04/2025, 12:57 AM",
+      "price": 78.59,
+      "price_high": 78.59,
+      "price_low": 78.59
+    },
+    {
+      "last_update": "14/04/2025, 12:16 AM",
+      "price": 78.36,
+      "price_high": 78.36,
+      "price_low": 78.36
+    },
+    {
+      "last_update": "11/04/2025, 12:09 AM",
+      "price": 77.26,
+      "price_high": 77.26,
+      "price_low": 77.26
+    },
+    {
+      "last_update": "10/04/2025, 12:00 AM",
+      "price": 75.8,
+      "price_high": 75.8,
+      "price_low": 75.8
+    },
+    {
+      "last_update": "09/04/2025, 12:13 AM",
+      "price": 74.28,
+      "price_high": 74.28,
+      "price_low": 74.28
+    },
+    {
+      "last_update": "08/04/2025, 12:03 AM",
+      "price": 73.36,
+      "price_high": 73.36,
+      "price_low": 73.36
+    },
+    {
+      "last_update": "07/04/2025, 12:11 AM",
+      "price": 72.19,
+      "price_high": 72.19,
+      "price_low": 72.19
+    },
+    {
+      "last_update": "04/04/2025, 12:15 AM",
+      "price": 70.59,
+      "price_high": 70.59,
+      "price_low": 70.59
+    },
+    {
+      "last_update": "03/04/2025, 12:08 AM",
+      "price": 70.25,
+      "price_high": 70.25,
+      "price_low": 70.25
+    },
+    {
+      "last_update": "02/04/2025, 12:58 AM",
+      "price": 70.01,
+      "price_high": 70.01,
+      "price_low": 70.01
+    },
+    {
+      "last_update": "01/04/2025, 12:57 AM",
+      "price": 69.78,
+      "price_high": 69.78,
+      "price_low": 69.78
+    },
+    {
+      "last_update": "31/03/2025, 12:12 AM",
+      "price": 69.57,
+      "price_high": 69.57,
+      "price_low": 69.57
+    },
+    {
+      "last_update": "28/03/2025, 12:04 AM",
+      "price": 69.44,
+      "price_high": 69.44,
+      "price_low": 69.44
+    },
+    {
+      "last_update": "27/03/2025, 12:06 AM",
+      "price": 69.02,
+      "price_high": 69.02,
+      "price_low": 69.02
+    },
+    {
+      "last_update": "26/03/2025, 12:48 AM",
+      "price": 68.7,
+      "price_high": 68.7,
+      "price_low": 68.7
+    },
+    {
+      "last_update": "25/03/2025, 12:53 AM",
+      "price": 68.39,
+      "price_high": 68.39,
+      "price_low": 68.39
+    },
+    {
+      "last_update": "24/03/2025, 12:56 AM",
+      "price": 68.31,
+      "price_high": 68.31,
+      "price_low": 68.31
+    },
+    {
+      "last_update": "21/03/2025, 12:59 AM",
+      "price": 67.86,
+      "price_high": 67.86,
+      "price_low": 67.86
+    },
+    {
+      "last_update": "20/03/2025, 12:00 AM",
+      "price": 67.63,
+      "price_high": 67.63,
+      "price_low": 67.63
+    },
+    {
+      "last_update": "19/03/2025, 12:02 AM",
+      "price": 67.63,
+      "price_high": 67.63,
+      "price_low": 67.63
+    },
+    {
+      "last_update": "18/03/2025, 12:04 AM",
+      "price": 66.79,
+      "price_high": 66.79,
+      "price_low": 66.79
+    },
+    {
+      "last_update": "17/03/2025, 12:03 AM",
+      "price": 66.56,
+      "price_high": 66.56,
+      "price_low": 66.56
+    },
+    {
+      "last_update": "14/03/2025, 12:26 AM",
+      "price": 66.44,
+      "price_high": 66.44,
+      "price_low": 66.44
+    },
+    {
+      "last_update": "13/03/2025, 12:27 AM",
+      "price": 66.25,
+      "price_high": 66.25,
+      "price_low": 66.25
+    },
+    {
+      "last_update": "12/03/2025, 12:13 AM",
+      "price": 65.63,
+      "price_high": 65.63,
+      "price_low": 65.63
+    },
+    {
+      "last_update": "11/03/2025, 12:15 AM",
+      "price": 65.42,
+      "price_high": 65.42,
+      "price_low": 65.42
+    },
+    {
+      "last_update": "10/03/2025, 12:46 AM",
+      "price": 65.27,
+      "price_high": 65.27,
+      "price_low": 65.27
+    },
+    {
+      "last_update": "07/03/2025, 12:27 AM",
+      "price": 64.75,
+      "price_high": 64.75,
+      "price_low": 64.75
+    },
+    {
+      "last_update": "06/03/2025, 12:27 AM",
+      "price": 64.61,
+      "price_high": 64.61,
+      "price_low": 64.61
+    },
+    {
+      "last_update": "05/03/2025, 12:58 AM",
+      "price": 64.48,
+      "price_high": 64.48,
+      "price_low": 64.48
+    },
+    {
+      "last_update": "28/02/2025, 12:59 AM",
+      "price": 64.25,
+      "price_high": 64.25,
+      "price_low": 64.25
+    },
+    {
+      "last_update": "27/02/2025, 12:59 AM",
+      "price": 64.24,
+      "price_high": 64.24,
+      "price_low": 64.24
+    },
+    {
+      "last_update": "26/02/2025, 12:57 AM",
+      "price": 64.02,
+      "price_high": 64.02,
+      "price_low": 64.02
+    },
+    {
+      "last_update": "25/02/2025, 12:01 AM",
+      "price": 63.49,
+      "price_high": 63.49,
+      "price_low": 63.49
+    },
+    {
+      "last_update": "24/02/2025, 12:21 AM",
+      "price": 63.41,
+      "price_high": 63.41,
+      "price_low": 63.41
+    },
+    {
+      "last_update": "21/02/2025, 12:37 AM",
+      "price": 63.21,
+      "price_high": 63.21,
+      "price_low": 63.21
+    },
+    {
+      "last_update": "20/02/2025, 12:41 AM",
+      "price": 62.51,
+      "price_high": 62.51,
+      "price_low": 62.51
+    },
+    {
+      "last_update": "19/02/2025, 12:59 AM",
+      "price": 62.18,
+      "price_high": 62.18,
+      "price_low": 62.18
+    },
+    {
+      "last_update": "18/02/2025, 12:57 AM",
+      "price": 62.1,
+      "price_high": 62.1,
+      "price_low": 62.1
+    },
+    {
+      "last_update": "17/02/2025, 12:07 AM",
+      "price": 62.07,
+      "price_high": 62.07,
+      "price_low": 62.07
+    },
+    {
+      "last_update": "14/02/2025, 12:03 AM",
+      "price": 61.82,
+      "price_high": 61.82,
+      "price_low": 61.82
+    },
+    {
+      "last_update": "13/02/2025, 12:00 AM",
+      "price": 61.35,
+      "price_high": 61.35,
+      "price_low": 61.35
+    },
+    {
+      "last_update": "12/02/2025, 12:58 AM",
+      "price": 61.03,
+      "price_high": 61.03,
+      "price_low": 61.03
+    },
+    {
+      "last_update": "11/02/2025, 12:54 AM",
+      "price": 60.54,
+      "price_high": 60.54,
+      "price_low": 60.54
+    },
+    {
+      "last_update": "10/02/2025, 12:00 AM",
+      "price": 60.52,
+      "price_high": 60.52,
+      "price_low": 60.52
+    },
+    {
+      "last_update": "07/02/2025, 12:19 AM",
+      "price": 60.14,
+      "price_high": 60.14,
+      "price_low": 60.14
+    },
+    {
+      "last_update": "06/02/2025, 12:48 AM",
+      "price": 59.46,
+      "price_high": 59.46,
+      "price_low": 59.46
+    },
+    {
+      "last_update": "05/02/2025, 12:04 AM",
+      "price": 58.79,
+      "price_high": 58.79,
+      "price_low": 58.79
+    },
+    {
+      "last_update": "04/02/2025, 12:16 AM",
+      "price": 58.54,
+      "price_high": 58.54,
+      "price_low": 58.54
+    },
+    {
+      "last_update": "03/02/2025, 12:01 AM",
+      "price": 58.44,
+      "price_high": 58.44,
+      "price_low": 58.44
+    },
+    {
+      "last_update": "31/01/2025, 12:58 AM",
+      "price": 57.97,
+      "price_high": 57.97,
+      "price_low": 57.97
+    },
+    {
+      "last_update": "30/01/2025, 12:01 AM",
+      "price": 57.39,
+      "price_high": 57.39,
+      "price_low": 57.39
+    },
+    {
+      "last_update": "29/01/2025, 12:04 AM",
+      "price": 57.3,
+      "price_high": 57.3,
+      "price_low": 57.3
+    },
+    {
+      "last_update": "28/01/2025, 12:02 AM",
+      "price": 56.86,
+      "price_high": 56.86,
+      "price_low": 56.86
+    },
+    {
+      "last_update": "27/01/2025, 12:02 AM",
+      "price": 56.65,
+      "price_high": 56.65,
+      "price_low": 56.65
+    },
+    {
+      "last_update": "24/01/2025, 12:01 AM",
+      "price": 56.28,
+      "price_high": 56.28,
+      "price_low": 56.28
+    },
+    {
+      "last_update": "23/01/2025, 12:18 AM",
+      "price": 55.76,
+      "price_high": 55.76,
+      "price_low": 55.76
+    },
+    {
+      "last_update": "22/01/2025, 12:03 AM",
+      "price": 55.3,
+      "price_high": 55.3,
+      "price_low": 55.3
+    },
+    {
+      "last_update": "21/01/2025, 12:07 AM",
+      "price": 54.99,
+      "price_high": 54.99,
+      "price_low": 54.99
+    },
+    {
+      "last_update": "20/01/2025, 12:57 AM",
+      "price": 54.91,
+      "price_high": 54.91,
+      "price_low": 54.91
+    },
+    {
+      "last_update": "19/01/2025, 07:04 PM",
+      "price": 54.76,
+      "price_high": 54.76,
+      "price_low": 54.76
+    },
+    {
+      "last_update": "16/01/2025, 12:52 AM",
+      "price": 54.37,
+      "price_high": 54.37,
+      "price_low": 54.37
+    },
+    {
+      "last_update": "15/01/2025, 12:58 AM",
+      "price": 53.96,
+      "price_high": 53.96,
+      "price_low": 53.96
+    },
+    {
+      "last_update": "14/01/2025, 12:06 AM",
+      "price": 53.88,
+      "price_high": 53.88,
+      "price_low": 53.88
+    },
+    {
+      "last_update": "10/01/2025, 12:58 AM",
+      "price": 53.85,
+      "price_high": 53.85,
+      "price_low": 53.85
+    },
+    {
+      "last_update": "09/01/2025, 12:17 AM",
+      "price": 53.28,
+      "price_high": 53.28,
+      "price_low": 53.28
+    },
+    {
+      "last_update": "08/01/2025, 12:00 AM",
+      "price": 53.07,
+      "price_high": 53.07,
+      "price_low": 53.07
+    },
+    {
+      "last_update": "07/01/2025, 12:04 AM",
+      "price": 53.01,
+      "price_high": 53.01,
+      "price_low": 53.01
+    },
+    {
+      "last_update": "03/01/2025, 12:11 AM",
+      "price": 52.57,
+      "price_high": 52.57,
+      "price_low": 52.57
+    },
+    {
+      "last_update": "02/01/2025, 12:58 AM",
+      "price": 52.03,
+      "price_high": 52.03,
+      "price_low": 52.03
+    },
+    {
+      "last_update": "30/12/2024, 12:00 AM",
+      "price": 51.93,
+      "price_high": 51.93,
+      "price_low": 51.93
+    },
+    {
+      "last_update": "27/12/2024, 12:14 AM",
+      "price": 51.77,
+      "price_high": 51.77,
+      "price_low": 51.77
+    },
+    {
+      "last_update": "26/12/2024, 12:07 AM",
+      "price": 51.64,
+      "price_high": 51.64,
+      "price_low": 51.64
+    },
+    {
+      "last_update": "23/12/2024, 12:55 AM",
+      "price": 51.54,
+      "price_high": 51.54,
+      "price_low": 51.54
+    },
+    {
+      "last_update": "20/12/2024, 12:20 AM",
+      "price": 51.35,
+      "price_high": 51.35,
+      "price_low": 51.35
+    },
+    {
+      "last_update": "19/12/2024, 12:26 AM",
+      "price": 50.95,
+      "price_high": 50.95,
+      "price_low": 50.95
+    },
+    {
+      "last_update": "18/12/2024, 12:10 AM",
+      "price": 50.54,
+      "price_high": 50.54,
+      "price_low": 50.54
+    },
+    {
+      "last_update": "17/12/2024, 12:09 AM",
+      "price": 50.37,
+      "price_high": 50.37,
+      "price_low": 50.37
+    },
+    {
+      "last_update": "16/12/2024, 12:40 AM",
+      "price": 50.33,
+      "price_high": 50.33,
+      "price_low": 50.33
+    },
+    {
+      "last_update": "13/12/2024, 12:59 AM",
+      "price": 49.91,
+      "price_high": 49.91,
+      "price_low": 49.91
+    },
+    {
+      "last_update": "12/12/2024, 12:14 AM",
+      "price": 49.48,
+      "price_high": 49.48,
+      "price_low": 49.48
+    },
+    {
+      "last_update": "11/12/2024, 12:04 AM",
+      "price": 49.11,
+      "price_high": 49.11,
+      "price_low": 49.11
+    },
+    {
+      "last_update": "10/12/2024, 12:13 AM",
+      "price": 48.87,
+      "price_high": 48.87,
+      "price_low": 48.87
+    },
+    {
+      "last_update": "09/12/2024, 12:27 AM",
+      "price": 48.79,
+      "price_high": 48.79,
+      "price_low": 48.79
+    },
+    {
+      "last_update": "06/12/2024, 12:59 AM",
+      "price": 48.33,
+      "price_high": 48.33,
+      "price_low": 48.33
+    },
+    {
+      "last_update": "05/12/2024, 12:00 AM",
+      "price": 48.12,
+      "price_high": 48.12,
+      "price_low": 48.12
+    },
+    {
+      "last_update": "04/12/2024, 12:02 AM",
+      "price": 47.86,
+      "price_high": 47.86,
+      "price_low": 47.86
+    },
+    {
+      "last_update": "03/12/2024, 12:02 AM",
+      "price": 47.73,
+      "price_high": 47.73,
+      "price_low": 47.73
+    },
+    {
+      "last_update": "02/12/2024, 12:22 AM",
+      "price": 47.61,
+      "price_high": 47.61,
+      "price_low": 47.61
+    },
+    {
+      "last_update": "29/11/2024, 12:14 AM",
+      "price": 47.31,
+      "price_high": 47.31,
+      "price_low": 47.31
+    },
+    {
+      "last_update": "28/11/2024, 12:17 AM",
+      "price": 46.86,
+      "price_high": 46.86,
+      "price_low": 46.86
+    },
+    {
+      "last_update": "27/11/2024, 12:21 AM",
+      "price": 46.75,
+      "price_high": 46.75,
+      "price_low": 46.75
+    },
+    {
+      "last_update": "26/11/2024, 12:00 AM",
+      "price": 46.64,
+      "price_high": 46.64,
+      "price_low": 46.64
+    },
+    {
+      "last_update": "25/11/2024, 12:42 AM",
+      "price": 46.62,
+      "price_high": 46.62,
+      "price_low": 46.62
+    },
+    {
+      "last_update": "22/11/2024, 12:10 AM",
+      "price": 46.33,
+      "price_high": 46.33,
+      "price_low": 46.33
+    },
+    {
+      "last_update": "21/11/2024, 12:55 AM",
+      "price": 46.06,
+      "price_high": 46.06,
+      "price_low": 46.06
+    },
+    {
+      "last_update": "20/11/2024, 12:21 AM",
+      "price": 45.84,
+      "price_high": 45.84,
+      "price_low": 45.84
+    },
+    {
+      "last_update": "19/11/2024, 12:23 AM",
+      "price": 45.79,
+      "price_high": 45.79,
+      "price_low": 45.79
+    },
+    {
+      "last_update": "15/11/2024, 12:06 AM",
+      "price": 45.51,
+      "price_high": 45.51,
+      "price_low": 45.51
+    },
+    {
+      "last_update": "14/11/2024, 12:07 AM",
+      "price": 45.05,
+      "price_high": 45.05,
+      "price_low": 45.05
+    },
+    {
+      "last_update": "13/11/2024, 12:01 AM",
+      "price": 44.93,
+      "price_high": 44.93,
+      "price_low": 44.93
+    },
+    {
+      "last_update": "12/11/2024, 12:09 AM",
+      "price": 44.75,
+      "price_high": 44.75,
+      "price_low": 44.75
+    },
+    {
+      "last_update": "11/11/2024, 12:04 AM",
+      "price": 44.7,
+      "price_high": 44.7,
+      "price_low": 44.7
+    },
+    {
+      "last_update": "08/11/2024, 12:06 AM",
+      "price": 44.19,
+      "price_high": 44.19,
+      "price_low": 44.19
+    },
+    {
+      "last_update": "07/11/2024, 12:59 AM",
+      "price": 43.78,
+      "price_high": 43.78,
+      "price_low": 43.78
+    },
+    {
+      "last_update": "06/11/2024, 12:07 AM",
+      "price": 43.46,
+      "price_high": 43.46,
+      "price_low": 43.46
+    },
+    {
+      "last_update": "05/11/2024, 12:56 AM",
+      "price": 42.86,
+      "price_high": 42.86,
+      "price_low": 42.86
+    },
+    {
+      "last_update": "01/11/2024, 12:00 AM",
+      "price": 42.71,
+      "price_high": 42.71,
+      "price_low": 42.71
+    },
+    {
+      "last_update": "31/10/2024, 12:00 AM",
+      "price": 42.56,
+      "price_high": 42.56,
+      "price_low": 42.56
+    },
+    {
+      "last_update": "30/10/2024, 12:00 AM",
+      "price": 42.23,
+      "price_high": 42.23,
+      "price_low": 42.23
+    },
+    {
+      "last_update": "29/10/2024, 12:07 AM",
+      "price": 41.74,
+      "price_high": 41.74,
+      "price_low": 41.74
+    },
+    {
+      "last_update": "28/10/2024, 12:01 AM",
+      "price": 41.04,
+      "price_high": 41.04,
+      "price_low": 41.04
+    },
+    {
+      "last_update": "25/10/2024, 12:56 AM",
+      "price": 40.88,
+      "price_high": 40.88,
+      "price_low": 40.88
+    },
+    {
+      "last_update": "24/10/2024, 12:03 AM",
+      "price": 39.46,
+      "price_high": 39.46,
+      "price_low": 39.46
+    },
+    {
+      "last_update": "23/10/2024, 12:02 AM",
+      "price": 39.32,
+      "price_high": 39.32,
+      "price_low": 39.32
+    },
+    {
+      "last_update": "22/10/2024, 12:50 AM",
+      "price": 39.18,
+      "price_high": 39.18,
+      "price_low": 39.18
+    },
+    {
+      "last_update": "21/10/2024, 12:04 AM",
+      "price": 39.17,
+      "price_high": 39.17,
+      "price_low": 39.17
+    },
+    {
+      "last_update": "18/10/2024, 12:59 AM",
+      "price": 39.13,
+      "price_high": 39.13,
+      "price_low": 39.13
+    },
+    {
+      "last_update": "17/10/2024, 12:58 AM",
+      "price": 39.01,
+      "price_high": 39.01,
+      "price_low": 39.01
+    },
+    {
+      "last_update": "16/10/2024, 12:58 AM",
+      "price": 38.92,
+      "price_high": 38.92,
+      "price_low": 38.92
+    },
+    {
+      "last_update": "15/10/2024, 12:47 AM",
+      "price": 38.89,
+      "price_high": 38.89,
+      "price_low": 38.89
+    },
+    {
+      "last_update": "14/10/2024, 12:56 AM",
+      "price": 38.89,
+      "price_high": 38.89,
+      "price_low": 38.89
+    },
+    {
+      "last_update": "11/10/2024, 12:59 AM",
+      "price": 37.65,
+      "price_high": 37.65,
+      "price_low": 37.65
+    },
+    {
+      "last_update": "10/10/2024, 12:19 AM",
+      "price": 37.53,
+      "price_high": 37.53,
+      "price_low": 37.53
+    },
+    {
+      "last_update": "09/10/2024, 12:13 AM",
+      "price": 37.07,
+      "price_high": 37.07,
+      "price_low": 37.07
+    },
+    {
+      "last_update": "08/10/2024, 12:58 AM",
+      "price": 37.04,
+      "price_high": 37.04,
+      "price_low": 37.04
+    },
+    {
+      "last_update": "07/10/2024, 12:00 AM",
+      "price": 37.04,
+      "price_high": 37.04,
+      "price_low": 37.04
+    },
+    {
+      "last_update": "04/10/2024, 12:43 AM",
+      "price": 36.99,
+      "price_high": 36.99,
+      "price_low": 36.99
+    },
+    {
+      "last_update": "03/10/2024, 12:04 AM",
+      "price": 36.98,
+      "price_high": 36.98,
+      "price_low": 36.98
+    },
+    {
+      "last_update": "02/10/2024, 12:37 AM",
+      "price": 36.92,
+      "price_high": 36.92,
+      "price_low": 36.92
+    },
+    {
+      "last_update": "01/10/2024, 12:57 AM",
+      "price": 36.92,
+      "price_high": 36.92,
+      "price_low": 36.92
+    },
+    {
+      "last_update": "30/09/2024, 12:29 AM",
+      "price": 36.91,
+      "price_high": 36.91,
+      "price_low": 36.91
+    },
+    {
+      "last_update": "27/09/2024, 12:10 AM",
+      "price": 36.87,
+      "price_high": 36.87,
+      "price_low": 36.87
+    },
+    {
+      "last_update": "26/09/2024, 12:18 AM",
+      "price": 36.85,
+      "price_high": 36.85,
+      "price_low": 36.85
+    },
+    {
+      "last_update": "24/09/2024, 12:01 AM",
+      "price": 36.81,
+      "price_high": 36.81,
+      "price_low": 36.81
+    },
+    {
+      "last_update": "23/09/2024, 12:15 AM",
+      "price": 36.82,
+      "price_high": 36.82,
+      "price_low": 36.82
+    },
+    {
+      "last_update": "20/09/2024, 12:02 AM",
+      "price": 36.8,
+      "price_high": 36.8,
+      "price_low": 36.8
+    },
+    {
+      "last_update": "19/09/2024, 12:04 AM",
+      "price": 36.78,
+      "price_high": 36.78,
+      "price_low": 36.78
+    },
+    {
+      "last_update": "18/09/2024, 12:00 AM",
+      "price": 36.77,
+      "price_high": 36.77,
+      "price_low": 36.77
+    },
+    {
+      "last_update": "17/09/2024, 12:01 AM",
+      "price": 36.78,
+      "price_high": 36.78,
+      "price_low": 36.78
+    },
+    {
+      "last_update": "13/09/2024, 12:59 AM",
+      "price": 36.74,
+      "price_high": 36.74,
+      "price_low": 36.74
+    },
+    {
+      "last_update": "12/09/2024, 12:58 AM",
+      "price": 36.73,
+      "price_high": 36.73,
+      "price_low": 36.73
+    },
+    {
+      "last_update": "11/09/2024, 12:07 AM",
+      "price": 36.71,
+      "price_high": 36.71,
+      "price_low": 36.71
+    },
+    {
+      "last_update": "10/09/2024, 12:21 AM",
+      "price": 36.69,
+      "price_high": 36.69,
+      "price_low": 36.69
+    },
+    {
+      "last_update": "09/09/2024, 12:00 AM",
+      "price": 36.7,
+      "price_high": 36.7,
+      "price_low": 36.7
+    },
+    {
+      "last_update": "06/09/2024, 12:58 AM",
+      "price": 36.68,
+      "price_high": 36.68,
+      "price_low": 36.68
+    },
+    {
+      "last_update": "03/09/2024, 12:59 AM",
+      "price": 36.64,
+      "price_high": 36.64,
+      "price_low": 36.64
+    },
+    {
+      "last_update": "02/09/2024, 12:59 AM",
+      "price": 36.65,
+      "price_high": 36.65,
+      "price_low": 36.65
+    },
+    {
+      "last_update": "30/08/2024, 12:19 AM",
+      "price": 36.63,
+      "price_high": 36.63,
+      "price_low": 36.63
+    },
+    {
+      "last_update": "28/08/2024, 12:04 AM",
+      "price": 36.59,
+      "price_high": 36.59,
+      "price_low": 36.59
+    },
+    {
+      "last_update": "27/08/2024, 12:11 AM",
+      "price": 36.56,
+      "price_high": 36.56,
+      "price_low": 36.56
+    },
+    {
+      "last_update": "26/08/2024, 12:46 AM",
+      "price": 36.59,
+      "price_high": 36.59,
+      "price_low": 36.59
+    },
+    {
+      "last_update": "23/08/2024, 12:03 AM",
+      "price": 36.7,
+      "price_high": 36.7,
+      "price_low": 36.7
+    },
+    {
+      "last_update": "22/08/2024, 12:06 AM",
+      "price": 36.65,
+      "price_high": 36.65,
+      "price_low": 36.65
+    },
+    {
+      "last_update": "16/08/2024, 12:10 AM",
+      "price": 36.68,
+      "price_high": 36.68,
+      "price_low": 36.68
+    },
+    {
+      "last_update": "15/08/2024, 12:38 AM",
+      "price": 36.61,
+      "price_high": 36.61,
+      "price_low": 36.61
+    },
+    {
+      "last_update": "14/08/2024, 12:04 AM",
+      "price": 36.66,
+      "price_high": 36.66,
+      "price_low": 36.66
+    },
+    {
+      "last_update": "13/08/2024, 12:29 AM",
+      "price": 36.63,
+      "price_high": 36.63,
+      "price_low": 36.63
+    },
+    {
+      "last_update": "12/08/2024, 12:57 AM",
+      "price": 36.67,
+      "price_high": 36.67,
+      "price_low": 36.67
+    },
+    {
+      "last_update": "08/08/2024, 12:00 AM",
+      "price": 36.68,
+      "price_high": 36.68,
+      "price_low": 36.68
+    }
+  ]
+}
