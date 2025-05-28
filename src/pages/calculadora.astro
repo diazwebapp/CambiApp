@@ -1,59 +1,47 @@
 ---
+import CardTasa from "../components/calculadora/CardTasa.astro";
+import Trends from "../components/Trends.astro"
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Calculadora" >
     <div id="calApp">
-        <div id="exchange-rates-container">
-        <div id="bcv" class="exchange-rate-card">
-            <div class="card-header">
-            <h3 class="card-title">Tasa bcv</h3>
-            <span class="change-indicator-up">0.0%</span>
-            </div>
-            <p class="rate-value">0.0 Bs/$</p>
-            <button class="use-rate-button secondary-button">Usar esta tasa</button>
-        </div>
-        <div id="promedio" class="exchange-rate-card">
-            <div class="card-header">
-            <h3 class="card-title">Tasa promedio</h3>
-            <span class="change-indicator-up">0.0%</span>
-            </div>
-            <p class="rate-value">0.0 Bs/$</p>
-            <button class="use-rate-button secondary-button">Usar esta tasa</button>
-        </div>
-        <div id="paralelo" class="exchange-rate-card">
-            <div class="card-header">
-            <h3 class="card-title">Tasa paralelo</h3>
-            <span class="change-indicator-up">0.0%</span>
-            </div>
-            <p class="rate-value">0.0 Bs/$</p>
-            <button class="use-rate-button primary-button">Usar esta tasa</button>
-        </div>
-</div>
-
-
-
-        
         <div id="containerInputs" role="group" aria-labelledby="inputGroupHeading">
-            <strong>Monto en dolares</strong>
+            <p>Monto en dólares</p>
             <div class="inputGroup">
                 <label for="usd">$</label>
                 <input type="number" step="0.01" id="usd" aria-label="Introducir monto en Dólares Americanos" placeholder="100" value="100">
             </div>
-            <strong>Monto en bolivares</strong>
+            <p>Monto en bolívares</p>
             <div class="inputGroup">
                 <label for="bs">Bs</label>
                 <input type="number" step="0.01" id="bs" aria-label="Introducir monto en Bolívares Soberanos" placeholder="100" >
             </div>
+            <div id="access-group">
+                <button class="access">10</button>
+                <button class="access">20</button>
+                <button class="access">50</button>
+                <button class="access">100</button>
+                <button class="access">200</button>
+            </div>
+        </div>
+        <!-- tarjetas de tasas de cambio -->
+        <div id="contenedorTasas">
+            <CardTasa/>
+        </div>
+        <div id="conversion-result">
+            <h3 class="result-title">Resultado</h3>
+            <Trends />  
         </div>
     </div>
 
 </Layout>
+
 <script>
 
 const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
     const state={
-        currentTasa:"paralelo",
+        currentTasa:"promedio",
         tasas:{  
         bcv:{
             change: 0.06,
@@ -61,14 +49,14 @@ const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=d
             image: "https://res.cloudinary.com/dcpyfqx87/image/upload/v1729921478/monitors/public_id:bcv.webp",
             last_update: "26/05/2025, 12:00 AM",
             percent: 0.06,
-            price: 95.08,
+            price: 0,
             price_old: 95.02,
             symbol: "▲",
             title: "BCV"
         },
             promedio:{
                 image: "https://cdn-icons-png.flaticon.com/512/11037/11037237.png",
-                price: 95.08,
+                price: 0,
                 title: "Promedio"
             },
             paralelo:{
@@ -77,7 +65,7 @@ const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=d
             image: "https://res.cloudinary.com/dcpyfqx87/image/upload/v1729921479/monitors/public_id:epv.webp",
             last_update: "26/05/2025, 12:00 AM",
             percent: 0.06,
-            price: 95.08,
+            price: 0,
             price_old: 95.02,
             symbol: "▲",
             title: "Paralelo"
@@ -93,12 +81,14 @@ const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=d
         bcvCard:any
         promedioCard:any
         paraleloCard:any
+        predefineBtns:any
     }={
         bsInput: null,
         usdInput:null,
         bcvCard: null,
         promedioCard: null,
-        paraleloCard: null
+        paraleloCard: null,
+        predefineBtns:null
     }
    
     document.addEventListener("astro:page-load",async()=>{
@@ -114,38 +104,72 @@ const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=d
             dom.promedioCard = cards[1]
             dom.paraleloCard = cards[2]
         }
-        
+        //Obtener botones de montos predefinidos
+        const predefineBtns = document.querySelectorAll("#access-group .access")
+        if (predefineBtns && predefineBtns.length > 0){
+            dom.predefineBtns = predefineBtns
+        }
         ////Añadir Listeners
         addListeners()
         fetchRates()
         calculateRates(null)
         
+        if(window.SharedWorker){
+
+              window.sharedWorker.port.onmessage = (event) => {
+                state.currentTasa =  event.data.response.tasa ;
+                calculateRates(null)
+              };
+              
+            }
     })
 
    const addListeners = ():void=>{
-    dom.usdInput?.addEventListener("keyup",()=>calculateRates(null))
-    dom.bsInput?.addEventListener("keyup",()=>calculateRates(dom.usdInput))
+    dom.usdInput?.addEventListener("input",()=>calculateRates(null))
+    dom.bsInput?.addEventListener("input",()=>calculateRates(dom.usdInput))
+    if (dom.predefineBtns && dom.predefineBtns.length > 0){
+            for(let btn of dom.predefineBtns){
+                btn.addEventListener("click",()=>{
+                    if(dom.usdInput){
+                        dom.usdInput.value = btn.textContent
+                        dom.usdInput.dispatchEvent(new Event("input"))
+                    }
+                })
+            }
+        }
     
    }
    const calculateRates = (resultInput:HTMLInputElement | null):void=>{
-    state.tasas.promedio.price = parseFloat(((state.tasas.bcv.price + state.tasas.paralelo.price) / 2).toFixed(2))
-    if(resultInput){ //si no hay un input, se asume que el estan escribiendo bs
-        const monto = dom.bsInput? parseFloat(dom.bsInput.value) : 0
-        const result = monto / state.tasas[state.currentTasa as keyof typeof state.tasas].price
-        
-        if(dom.bsInput){
-            resultInput.value = isNaN(result) ? "0" : result.toFixed(2);
+     // 1. Calcular tasa promedio
+    state.tasas.promedio.price = parseFloat(
+        ((state.tasas.bcv.price + state.tasas.paralelo.price) / 2).toFixed(2)
+    );
+
+    // 2. Obtener tasa actual segura
+    const currentRate = state.tasas[state.currentTasa as keyof typeof state.tasas]?.price || 1;
+    
+    // 3. Determinar dirección de conversión
+    const isConvertingToUSD = resultInput !== null;
+    
+    if (isConvertingToUSD) {
+        // Caso BS → USD (cuando se escribe en bsInput)
+        if (dom.bsInput) {
+            const montoBS = parseFloat(dom.bsInput.value) || 0;
+            const resultUSD = montoBS / currentRate;
+            resultInput.value = resultUSD.toFixed(2);
         }
-        return
+    } else {
+        // Caso USD → BS (cuando se escribe en usdInput)
+        if (dom.usdInput) {
+            const montoUSD = parseFloat(dom.usdInput.value) || 0;
+            const resultBS = montoUSD * currentRate;
+            if (dom.bsInput) {
+                dom.bsInput.value = resultBS.toFixed(2);
+            }
+        }
     }
 
-    const monto = dom.usdInput? parseFloat(dom.usdInput.value) : 0
-    const result = monto * state.tasas[state.currentTasa as keyof typeof state.tasas].price
-    
-    if(dom.bsInput){
-        dom.bsInput.value = isNaN(result) ? "0" : result.toFixed(2);
-    }
-    
+    updateUI();
    }
 
    const updateUI = ()=>{
@@ -168,7 +192,6 @@ const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=d
         state.tasas.bcv.price = res.monitors.bcv.price
         state.tasas.paralelo.price= res.monitors.enparalelovzla.price
         calculateRates(null)
-        updateUI()
     } catch (error) {
         console.error("reintentando en 2s... "+error)
         setTimeout(fetchRates,2000)
@@ -177,11 +200,34 @@ const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=d
 </script>
 
 <style is:inline >
+    #calApp,#access-group{
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+    }
+    #access-group{
+        margin-top: 12px;
+        justify-content: space-around;
+    }
     #bs,#usd{
         padding-left: 32px;
         width: 100%;
         position: relative;
         font-size: 100%;
+    }
+    #access-group{
+        button{
+            background-color: var(--bg-cards);
+            border-radius: var(--rounded);
+            padding: 7px 15px;
+        }
+    }
+    #access-group button:before{
+        content: "$";
+        margin-right: 5px;
+    }
+    #access-group button:hover{
+        background-color: var(--color-borders);
     }
     #containerInputs .inputGroup{position: relative; margin: 5px 0;}
     #containerInputs label{
@@ -193,68 +239,36 @@ const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=d
         font-size: 100%;
         font-weight: 450;
     }
+    #containerInputs p{
+        font-weight: 500;
+    }
     /*/////////css de arriba//////////*/
-      #exchange-rates-container {
+    #containerInputs,#contenedorTasas{
+        margin-bottom: 1.5rem;
+        padding: 5px;
+        width: 100%;
+    }
+    #contenedorTasas {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
-    margin-bottom: 1.5rem;
   }
 
   @media (min-width: 768px) {
-    #exchange-rates-container {
+    #contenedorTasas {
       grid-template-columns: repeat(3, 1fr);
+      order:1;
+    }
+    #containerInputs{
+        order: 2;
+        width: 49%;
+    }
+    #conversion-result{
+        order: 3;
+        width: 49%;
     }
   }
 
-  .exchange-rate-card {
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px var(--color-borders);
-    padding: 1rem;
-  }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .card-title {
-    font-weight: 500;
-    opacity: 0.8;
-  }
-
-  .change-indicator-up {
-    color: var(--success);
-  }
-
-  .change-indicator-down {
-    color: var(--danger);
-  }
-
-  .rate-value {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-
-  .use-rate-button {
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    border: none;
-    color:var(--secondary)
-  }
-
-  .secondary-button:hover {
-    background-color: var(--bg-cards);
-  }
-
-  .primary-button {
-    background-color: var(--primary); /* Assuming a primary blue, adjust as needed */
-    color: #ffffff;
-  }
+  
 
 </style>

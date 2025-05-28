@@ -1,0 +1,121 @@
+<div id="bcv" class="rate-card">
+    <div class="card-header">
+    <h3 class="card-title">Tasa bcv</h3>
+    <span class="change-indicator-up">0.0%</span>
+    </div>
+    <p class="rate-value">0.0 Bs/$</p>
+    <button data-tasa="bcv" class="use-rate-button secondary-button">Usar esta tasa</button>
+</div>
+<div id="promedio" class="rate-card">
+    <div class="card-header">
+    <h3 class="card-title">Tasa promedio</h3>
+    <span class="change-indicator-up">0.0%</span>
+    </div>
+    <p class="rate-value">0.0 Bs/$</p>
+    <button data-tasa="promedio" class="use-rate-button primary-button">Usar esta tasa</button>
+</div>
+<div id="paralelo" class="rate-card">
+    <div class="card-header">
+    <h3 class="card-title">Tasa paralelo</h3>
+    <span class="change-indicator-up">0.0%</span>
+    </div>
+    <p class="rate-value">0.0 Bs/$</p>
+    <button data-tasa="paralelo" class="use-rate-button secondary-button">Usar esta tasa</button>
+</div>
+<script>
+
+      
+  document.addEventListener("astro:page-load",()=>{
+    
+    const botones = document.getElementsByClassName("use-rate-button")
+    if(botones && botones.length > 0){
+      const t1 = performance.now()
+          test(botones)
+          const t2 = performance.now()
+          console.log((t2-t1).toFixed(3)+"ms")
+    }
+  })
+
+  function test(botones) {
+    for (const boton of botones) {
+        boton.addEventListener("click", () => {
+          
+            // Remover 'primary-button' de TODOS los botones primero
+
+            for(const btn of botones){
+              btn.classList.remove("primary-button");
+            }
+            
+            // Aplicar clases al botón clickeado
+            boton.classList.add("primary-button");
+            boton.classList.remove("secondary-button");
+            if(window.SharedWorker){
+
+              
+              // Enviar un mensaje al window.sharedWorker
+              window.sharedWorker.port.postMessage({
+                tasa: boton.getAttribute("data-tasa")
+              });
+
+            }
+        });
+    }
+        
+  }
+</script>
+<style>
+    
+    .rate-card {
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 var(--color-borders);
+    padding: 1rem;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-title {
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  .change-indicator-up {
+    color: var(--success);
+  }
+
+  .change-indicator-down {
+    color: var(--danger);
+  }
+
+  .rate-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .use-rate-button {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    border: none;
+  }
+.secondary-button {
+  background-color: var(--bg-cards);
+  transition: background-color 0.3s ease-in-out; 
+  box-shadow: 0px 0px 1px var(--color-borders) ;
+}
+
+.secondary-button:hover {
+  background-color: var(--color-borders);
+}
+
+  .primary-button {
+    background-color: var(--primary); 
+    color: #ffffff;
+  }
+</style>

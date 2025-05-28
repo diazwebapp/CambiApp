@@ -1,13 +1,12 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import BackLink from "../components/BackLink.astro";
+
 export interface Props {
   title?: String;
-  backBtn?:Boolean;
   menu?:Boolean;
 }
 
-const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
+const { title = "CambiApp", menu=false } = Astro.props;
 ---
 
 <!doctype html>
@@ -61,9 +60,9 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
 <style is:global>
   :root {
     --bg-app: rgb(240, 240, 240);
-    --color-borders: rgb(211, 210, 210);
+    --color-borders: rgb(210, 210, 210);
     --font-color: rgb(28, 28, 28);
-    --bg-cards:rgb(231, 230, 230);
+    --bg-cards:rgb(235, 235, 235);
     --primary: rgb(3 105 161);
     --secondary: rgb(70, 69, 69);
     --success: hsl(123, 91%, 46%);
@@ -75,7 +74,7 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
     --font-color: rgb(255, 255, 255);
     --bg-cards:rgb(30, 30, 30);
   }
-  * {
+  *,*::before,*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -89,11 +88,11 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
       "Noto Color Emoji";
     -webkit-font-smoothing: antialiased;
     color: var(--font-color);
+    font-size: 1.1rem;
   }
   .dark-icon {
     display: none;
   }
-
   [data-theme="dark"] .light-icon {
     display: none;
   }
@@ -102,10 +101,11 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
     display: inline;
   }
   input,button, option, select {
-    border: 1px solid var(--color-borders);
+    box-shadow: 0 0 2px 0 var(--color-borders) ;
     background-color: var(--bg-app);
     padding: 10px;
     outline: none;
+    border: none;
     border-radius: var(--rounded);
   }
   select{
@@ -140,7 +140,7 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
     padding: 5px 2% 5px 2%;
   }
   main,.container{
-    max-width: 1366px;
+    max-width: 1600px;
     margin: auto;
   }
   header{
@@ -272,7 +272,11 @@ const { title = "CambiApp", backBtn=false, menu=false } = Astro.props;
   }
 </style>
 
-<script>
+<script>  
+
+    window.sharedWorker = new SharedWorker(new URL('../worker/worker.js', import.meta.url));
+    window.sharedWorker.port.start();
+
   document.addEventListener("astro:page-load", () => {
     const themeToggle = document.getElementById("theme-toggle");
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
