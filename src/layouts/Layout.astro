@@ -1,5 +1,5 @@
 ---
-import { ClientRouter } from "astro:transitions";
+
 
 export interface Props {
   title?: String;
@@ -24,7 +24,7 @@ const { title = "CambiApp", menu=false } = Astro.props;
       name="description"
       content="CambiApp: Calcula tasas de cambio al instante con precisión. ¡Compara divisas, criptomonedas y más en segundos! Descarga gratis ahora."
     />
-    <ClientRouter />
+   
   </head>
   <body>
     <header>
@@ -278,11 +278,31 @@ input[type="number"]::-webkit-inner-spin-button {
 </style>
 
 <script>  
+if (window.SharedWorker && !window.sw) {
+    try {
+      window.sw = new SharedWorker(new URL('../worker/worker.js', import.meta.url),{ name: 'sw' });
+    } catch (error) {
+      console.log("no hay SW: ",error)
+    }
+}
 
-    window.sharedWorker = new SharedWorker(new URL('../worker/worker.js', import.meta.url));
-    window.sharedWorker.port.start();
+  document.addEventListener("DOMContentLoaded", () => {
+if (window.SharedWorker && window.sw) {
 
-  document.addEventListener("astro:page-load", () => {
+    const workerPort = window.sw.port;
+
+    // 1. (IMPORTANTE) Inicia el puerto explícitamente.
+    // Esto asegura que el puerto esté activo y escuchando mensajes.
+    // A menudo es la clave para que onmessage funcione después de navegaciones.
+    try {
+        workerPort.start();
+    } catch (e) {
+        console.error("Error al iniciar el puerto del SharedWorker:", e);
+        // Si hay un error aquí, el onmessage probablemente no funcionará.
+        return; // No continuar si el puerto no puede iniciarse.
+    }
+  }
+
     const themeToggle = document.getElementById("theme-toggle");
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 

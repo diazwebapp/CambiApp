@@ -47,7 +47,13 @@ self.onconnect = async (connectEvent) => {
       if (event.data === 'getRates') {
         // Si el cliente solicita tasas explícitamente
         if (bcv == 0 || paralelo == 0) {
-          await fetchRates()
+          fetchRates()
+        }else{
+          broadcast({
+            response: {
+              rates: { bcv, paralelo }
+            }
+          });
         }
       }
 

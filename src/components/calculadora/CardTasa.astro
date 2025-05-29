@@ -25,15 +25,15 @@
 <script>
 
       
-  document.addEventListener("astro:page-load",()=>{
+  document.addEventListener("DOMContentLoaded",()=>{
     
     const botones = document.getElementsByClassName("use-rate-button")
     if(botones && botones.length > 0){
-        test(botones)
+        addlisteners(botones)
     }
   })
 
-  function test(botones) {
+  function addlisteners(botones) {
     for (const boton of botones) {
         boton.addEventListener("click", () => {
           
@@ -46,9 +46,9 @@
             // Aplicar clases al botón clickeado
             boton.classList.add("primary-button");
             boton.classList.remove("secondary-button");
-            if(window.SharedWorker){
+            if(window.SharedWorker && window.sw){
               // Enviar un mensaje al window.sharedWorker
-              window.sharedWorker.port.postMessage({
+              window.sw.port.postMessage({
                 setTasa: boton.getAttribute("data-tasa")
               });
 

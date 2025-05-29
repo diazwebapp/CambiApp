@@ -167,10 +167,12 @@ const cards = [
 </style>
 
 <script>
-  document.addEventListener("astro:page-load",()=>{
-    if(window.SharedWorker){
-              
-      window.sharedWorker.port.onmessage = (event) => {
+
+
+  // Ejecutar después de cada navegación gestionada por Astro (View Transitions)
+  document.addEventListener('DOMContentLoaded',async()=>{
+    if(window.SharedWorker &&  window.sw){
+        window.sw.port.onmessage = (event) => {
         const {rates} = event.data.response
         if(rates){
             const {paralelo,bcv} = rates
@@ -184,8 +186,10 @@ const cards = [
               if(promedioElement) promedioElement.textContent = promedio+" Bs/$"
             
         }
-      };
-      
+      };     
+    }else{
+      console.log("no hay sw")
     }
-  })
+  });
+  
 </script>

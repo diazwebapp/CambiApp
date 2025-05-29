@@ -239,12 +239,12 @@ import Layout from "../layouts/Layout.astro";
     }
 </style>
 
-<script>
+<script is:inline >
     // Clave para localStorage
     const STORAGE_KEY = "paymentProfiles";
 
     // Cargar perfiles al iniciar
-    document.addEventListener("astro:page-load", () => {
+    document.addEventListener("DOMContentLoaded", () => {
         // Manejar el envío del formulario
         const form = document.getElementById("profileForm")
         if(form){

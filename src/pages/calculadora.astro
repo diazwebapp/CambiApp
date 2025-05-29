@@ -74,14 +74,7 @@ import Layout from "../layouts/Layout.astro";
         resultado:0
     }
  
-    const dom: {
-        bsInput:HTMLInputElement | null
-        usdInput:HTMLInputElement | null
-        bcvCard:any
-        promedioCard:any
-        paraleloCard:any
-        predefineBtns:any
-    }={
+    const dom={
         bsInput: null,
         usdInput:null,
         bcvCard: null,
@@ -90,7 +83,7 @@ import Layout from "../layouts/Layout.astro";
         predefineBtns:null
     }
    
-    document.addEventListener("astro:page-load",async()=>{
+    document.addEventListener("DOMContentLoaded",async()=>{
         //Obtener inputs del DOM
         const usdInput = document.getElementById("usd")
         const bsInput = document.getElementById("bs")
@@ -110,23 +103,23 @@ import Layout from "../layouts/Layout.astro";
         }
         ////Añadir Listeners
         addListeners()
-        calculateRates(null)
-        if(window.SharedWorker){
-            
-              window.sharedWorker.port.onmessage = (event) => {
-                const {rates,currentTasa} = event.data.response
-                if(rates){
-                    state.tasas.bcv.price = rates.bcv
-                    state.tasas.paralelo.price = rates.paralelo
-                    calculateRates(null)
-                }
-                
-                if(currentTasa){
-                    state.currentTasa =  event.data.response.currentTasa ;
-                    calculateRates(null)
-                }
-                
-              };
+        
+        if(window.SharedWorker &&  window.sw){
+                window.sw.port.onmessage = (event) => {
+                    
+                    const {rates,currentTasa} = event.data.response
+                    if(rates){
+                        state.tasas.bcv.price = rates.bcv
+                        state.tasas.paralelo.price = rates.paralelo
+                        calculateRates(null)
+                    }
+                    
+                    if(currentTasa){
+                        state.currentTasa =  event.data.response.currentTasa ;
+                        calculateRates(null)
+                    }
+                    
+                };
               
             }
     })
