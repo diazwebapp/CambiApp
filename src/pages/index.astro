@@ -1,475 +1,263 @@
 ---
-import PaydProfiles from "../components/PaydProfiles.astro";
+import CardTasa from "../components/calculadora/CardTasa.astro";
+import Trends from "../components/Trends.astro"
 import Layout from "../layouts/Layout.astro";
-
-const apiUrl = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
-
 ---
 
-<Layout menu >
-  <div class="calcApp">
-    <div id="typeCurrency">
-      <p id="typeConversionInfo">Dólares a Bolívares</p>
-      <label>
-        <input type="radio" name="currency" value="usd" checked />
-        <p class="currency-label">USD</p>
-      </label>
-      <label>
-        <input type="radio" name="currency" value="ves" />
-        <p class="currency-label">VES</p>
-      </label>
-    </div>
-    <div class="resultado">
-      <small>Resultado</small>
-      <strong id="resultValue">0</strong>
-      <small id="lastUpdate" style="display:block; text-align:center;"></small>
-    </div>
-    <div class="containerAmountInput">
-      <p style="display: block; width:100%;">Monto</p>
-      <input type="number" name="amountInput" id="amountInput" step="0.01" value="1" placeholder="15">
-      <button id="btnToggleCurrency" data-to="ves">USD</button>
-      <button>$10</button> <button>$15</button> <button>$20</button> <button>$50</button> <button>$100</button>
-    </div>
-
-    <div id="tasas">
-      <strong>Tasa a utilizar</strong>
-      <ul class="rowTasas">
-        <li data-text="bcv" class="active-rate" >bcv <span class="tasa">0</span></li>
-        <li data-text="paralelo" class="active-rate" >Paralelo <span class="tasa">(0)</span></li>
-        <li data-text="promedio" class="active-rate" >Promedio <span class="tasa">(0)</span></li>
-      </ul>
+<Layout title="Calculadora" >
+    <div id="calApp">
+        <div id="containerInputs" role="group" aria-labelledby="inputGroupHeading">
+            <p>Monto en dólares</p>
+            <div class="inputGroup">
+                <label for="usd">$</label>
+                <input type="number" step="0.01" id="usd" aria-label="Introducir monto en Dólares Americanos" placeholder="100" value="100">
+            </div>
+            <p>Monto en bolívares</p>
+            <div class="inputGroup">
+                <label for="bs">Bs</label>
+                <input type="number" step="0.01" id="bs" aria-label="Introducir monto en Bolívares Soberanos" placeholder="100" >
+            </div>
+            <div id="access-group">
+                <button class="access">10</button>
+                <button class="access">20</button>
+                <button class="access">50</button>
+                <button class="access">100</button>
+                <button class="access">200</button>
+            </div>
+        </div>
+        <!-- tarjetas de tasas de cambio -->
+        <div id="contenedorTasas">
+            <CardTasa/>
+        </div>
+        <div id="conversion-result">
+            <h3 class="result-title">Resultado</h3>
+            <Trends />  
+        </div>
     </div>
 
-    
-  </div>
-  <PaydProfiles />
 </Layout>
 
-<style is:inline>
-  .calcApp {
-  max-width: 500px;
-  min-width: 290px;
-  margin: auto;
-  padding: 0 15px;
-}
-
-.containerAmountInput input,
-.containerAmountInput button:not(#btnToggleCurrency) {
-  padding: 10px;
-}
-
-.containerAmountInput input {
-  width: 100%;
-  padding-right: 51px;
-  margin-bottom: 10px;
-}
-
-.containerAmountInput #btnToggleCurrency {
-  position: absolute;
-  right: 1.5px;
-  top: 26px;
-  width: 50px;
-  background: transparent;
-  border: none;
-  border-left: 1px solid var(--color-borders);
-  border-radius: 0;
-  cursor: pointer;
-}
-
-#typeCurrency, .containerAmountInput {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-
-#typeConversionInfo {
-  font-weight: bold;
-  transition: 0.3s ease;
-}
-
-.currency-label {
-  opacity: 0.5;
-  transition: 0.3s ease;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 5px;
-  margin-right: 5px;
-}
-
-#typeCurrency input[name="currency"] {
-  display: none;
-}
-
-#typeCurrency input[name="currency"]:checked + .currency-label {
-  background: var(--bg-cards);
-  opacity: 1;
-  font-weight: bold;
-}
-#tasas{
-  margin: 12px auto;
-}
-.rowTasas {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0;
-}
-
-.rowTasas li {
-  display: flex;
-  align-items: center;
-  padding: 7px ;
-  cursor: pointer;
-}
- .rowTasas li:hover{
-  background-color: var(--bg-cards);
- }
- .tasa{
-  margin: 0 5px;
- }
-
-.resultado {
-  background-color: var(--bg-cards);
-  border-radius: 10px;
-  padding: 15px;
-  text-align: center;
-  margin: 12px 0;
-}
-
-.resultado small {
-  color: var(--font-color);
-  font-weight: 200;
-  margin-top: 10px;
-}
-
-.resultado strong {
-  color: var(--font-color);
-  font-size: 1.5em;
-  display: block;
-  margin-top: 5px;
-}
-
-.error-message,
-.change-indicator {
-  font-size: 0.9em;
-}
-
-.error-message {
-  color: #f44336;
-  text-align: center;
-  margin-top: 10px;
-}
-.active-rate{
-  background-color: var(--bg-cards);
-  border: 1px solid var(--color-borders);
-  border-radius: var(--rounded);
-}
-</style>
-
 <script>
-  // Constantes y configuración
-const API_URL = "https://pydolarve.org/api/v2/dollar?page=alcambio&format_date=default&rounded_price=true";
-const MIN_API_CALL_INTERVAL = 5000; // 5 segundos entre llamadas
-const UPDATE_INTERVAL = 90 * 60 * 1000; // 90 minutos
 
-// Estado de la aplicación
-
-window.state = {
-  rates: {
-    bcv: 0,
-    paralelo: 0,
-    promedio: 0
-  },
-  lastUpdate: null,
-  lastApiCall: 0,
-  selectedCurrency: 'usd',
-  selectedRate: "promedio"
-};
-// Cache de elementos DOM
-let elements = {};
-
-// Inicialización
-document.addEventListener("astro:page-load", () => {
-  elements = {
-     typeConversionInfo: document.getElementById("typeConversionInfo"),
-  btnToggleCurrency: document.getElementById("btnToggleCurrency"),
-  currencyRadios: document.querySelectorAll('input[name="currency"]'),
-  amountInput: document.getElementById("amountInput"),
-  resultValue: document.getElementById("resultValue"),
-  lastUpdate: document.getElementById("lastUpdate"),
-  containerTasas: document.querySelectorAll(".rowTasas li"),
-  tasas: {
-    bcv: document.querySelector(".rowTasas li:nth-child(1) .tasa"),
-    paralelo: document.querySelector(".rowTasas li:nth-child(2) .tasa"),
-    promedio: document.querySelector(".rowTasas li:nth-child(3) .tasa")
-  },
-  }
-  setupEventListeners();
-  initializeApp();
-});
-
-// Configuración de event listeners
-function setupEventListeners() {
-  // Delegación de eventos para mejor performance
-  document.getElementById("typeCurrency")?.addEventListener("change", (e) => {
-    if (e.target.matches('input[name="currency"]')) {
-      handleCurrencyChange(e.target.value);
-    }
-  });
-
-  elements.btnToggleCurrency?.addEventListener("click", toggleCurrency);
-  elements.amountInput?.addEventListener("input", debounce(calculateRates, 500));
-
-  // Botones de monto rápido
-  document.querySelectorAll(".containerAmountInput button:not(#btnToggleCurrency)").forEach(btn => {
-    btn.addEventListener("click", () => {
-      elements.amountInput.value = btn.textContent.replace('$', '');
-      calculateRates();
-    });
-  });
-  if(elements.containerTasas){
-    for (const li of elements.containerTasas) {
-      li.addEventListener('click',()=>{calculateRates(li)})
-    }
-  }
-}
-
-// Inicializar la aplicación
-async function initializeApp() {
-  try {
-    await fetchRates();
-    // Configurar actualización periódica
-    setInterval(fetchRates, UPDATE_INTERVAL);
-    modifyClass(state.selectedRate)
-  } catch (error) {
-    showError("Error al cargar tasas iniciales");
-  }
-}
-
-// Obtener tasas de la API con protección anti-scraping
-async function fetchRates() {
-  const now = Date.now();
-  if (now - state.lastApiCall < MIN_API_CALL_INTERVAL) return;
-  state.lastApiCall = now;
-
-  try {
-    const response = await fetch(API_URL, {
-      headers: {
-        'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-        Authorization: 'Bearer JhZZj99yQrGoTOGdpNpOvQ'
-      }
-    });
-
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); 
-    
-    const data = await response.json();
-    validateApiData(data);
-    updateState(data);
-    updateUI();
-    calculateRates();
-
-  } catch (error) {
-    const data = {
-      datetime: {
-        date: "22-04-2025",
-        time: "12:00:00"
-        },
-      monitors: {
+    const state={
+        currentTasa:"promedio",
+        tasas:{  
         bcv:{
-          price:10,
+            change: 0.06,
+            color: "green",
+            image: "https://res.cloudinary.com/dcpyfqx87/image/upload/v1729921478/monitors/public_id:bcv.webp",
+            last_update: "26/05/2025, 12:00 AM",
+            percent: 0.06,
+            price: 0,
+            price_old: 95.02,
+            symbol: "▲",
+            title: "BCV"
         },
-        enparalelovzla:{
-          price:20
+            promedio:{
+                image: "https://cdn-icons-png.flaticon.com/512/11037/11037237.png",
+                price: 0,
+                title: "Promedio"
+            },
+            paralelo:{
+            change: 0.06,
+            color: "green",
+            image: "https://res.cloudinary.com/dcpyfqx87/image/upload/v1729921479/monitors/public_id:epv.webp",
+            last_update: "26/05/2025, 12:00 AM",
+            percent: 0.06,
+            price: 0,
+            price_old: 95.02,
+            symbol: "▲",
+            title: "Paralelo"
         }
-        }
-      }
-    validateApiData(data);
-    updateState(data);
-    updateUI();
-    calculateRates();
-    console.error("Error fetching rates:", error);
-    showError("Error actualizando tasas. Intentando nuevamente...");
-    setTimeout(fetchRates, 10000); // Reintentar después de 10 segundos
-  }
-}
-
-// Validar datos de la API
-function validateApiData(data) {
-  if (!data?.monitors?.bcv?.price || !data?.monitors?.enparalelovzla?.price) {
-    throw new Error("Datos de API incompletos");
-  }
-}
-
-// Actualizar el estado de la aplicación
-function updateState(data) {
-  state.rates.bcv = data.monitors.bcv.price;
-  state.rates.paralelo = data.monitors.enparalelovzla.price;
-  state.rates.promedio = (state.rates.bcv + state.rates.paralelo) / 2;
-  state.lastUpdate = `${data.datetime.date} ${data.datetime.time}`;
-  state.selectedCurrency = document.querySelector('input[name="currency"]:checked').value;
-  
-  // Guardar datos completos de los monitores
-  state.monitors = {
-    bcv: data.monitors.bcv,
-    paralelo: data.monitors.enparalelovzla,
-  };
-}
-
-// Actualizar la interfaz de usuario
-function updateUI() {
-  // Actualizar tasas con datos completos
-  updateRateUI('bcv', state.rates.bcv, state.monitors.bcv);
-  updateRateUI('paralelo', state.rates.paralelo, state.monitors.paralelo);
-  
-  // Calcular y mostrar datos para el promedio
-  const promedioChange = ((state.monitors.bcv.change + state.monitors.paralelo.change) / 2).toFixed(2);
-  //const promedioPercent = ((state.monitors.bcv.percent + state.monitors.paralelo.percent) / 2).toFixed(2);
-  const promedioColor = promedioChange > 0 ? 'green' : promedioChange < 0 ? 'red' : 'neutral';
-  const promedioSymbol = promedioChange > 0 ? '▲' : promedioChange < 0 ? '▼' : '<=>';
-  
-  elements.tasas.promedio.textContent = state.rates.promedio.toFixed(2);
-
-  // Actualizar usando DocumentFragment
-  function updatePromedioElement() {
-    const promedioLi = elements.tasas.promedio.parentElement;
-    const fragment = document.createDocumentFragment();
-    
-    // 1. Crear los elementos
-    const label = document.createTextNode('Promedio ');
-    
-    const tasaSpan = document.createElement('span');
-    tasaSpan.className = 'tasa';
-    tasaSpan.textContent = `(${state.rates.promedio.toFixed(2)})`;
-    
-    const changeSpan = document.createElement('span');
-    changeSpan.style.color = promedioColor;
-    changeSpan.textContent = ` ${promedioSymbol} ${Math.abs(promedioChange)}`;
-    
-    // 2. Construir el fragmento (fuera del DOM)
-    fragment.appendChild(label);
-    fragment.appendChild(tasaSpan);
-    fragment.appendChild(changeSpan);
-    
-    // 3. Limpiar el elemento existente (más eficiente que innerHTML)
-    while (promedioLi.firstChild) {
-      promedioLi.removeChild(promedioLi.firstChild);
+            
+        },
+        resultado:0
     }
+ 
+    const dom: {
+        bsInput:HTMLInputElement | null
+        usdInput:HTMLInputElement | null
+        bcvCard:any
+        promedioCard:any
+        paraleloCard:any
+        predefineBtns:any
+    }={
+        bsInput: null,
+        usdInput:null,
+        bcvCard: null,
+        promedioCard: null,
+        paraleloCard: null,
+        predefineBtns:null
+    }
+   
+    document.addEventListener("astro:page-load",async()=>{
+        //Obtener inputs del DOM
+        const usdInput = document.getElementById("usd")
+        const bsInput = document.getElementById("bs")
+        if(usdInput instanceof HTMLInputElement) dom.usdInput = usdInput
+        if(bsInput instanceof HTMLInputElement) dom.bsInput = bsInput
+        //Obtener tarjetas de tasas del DOM
+        const cards = document.getElementsByClassName("rate-value");
+        if (cards && cards.length > 0) {
+            dom.bcvCard = cards[0]
+            dom.promedioCard = cards[1]
+            dom.paraleloCard = cards[2]
+        }
+        //Obtener botones de montos predefinidos
+        const predefineBtns = document.querySelectorAll("#access-group .access")
+        if (predefineBtns && predefineBtns.length > 0){
+            dom.predefineBtns = predefineBtns
+        }
+        ////Añadir Listeners
+        addListeners()
+        
+        if(window.SharedWorker){
+            
+              window.sharedWorker.port.onmessage = (event) => {
+                const {rates,currentTasa} = event.data.response
+                if(rates){
+                    state.tasas.bcv.price = rates.bcv
+                    state.tasas.paralelo.price = rates.paralelo
+                    calculateRates(null)
+                }
+                
+                if(currentTasa){
+                    state.currentTasa =  event.data.response.currentTasa ;
+                    calculateRates(null)
+                }
+                
+              };
+              
+            }
+    })
+
+   const addListeners = ():void=>{
+    dom.usdInput?.addEventListener("input",()=>calculateRates(null))
+    dom.bsInput?.addEventListener("input",()=>calculateRates(dom.usdInput))
+    if (dom.predefineBtns && dom.predefineBtns.length > 0){
+            for(let btn of dom.predefineBtns){
+                btn.addEventListener("click",()=>{
+                    if(dom.usdInput){
+                        dom.usdInput.value = btn.textContent
+                        dom.usdInput.dispatchEvent(new Event("input"))
+                    }
+                })
+            }
+        }
     
-    // 4. Añadir el fragmento al DOM (solo 1 reflow)
-    promedioLi.appendChild(fragment);
-  }
-  updatePromedioElement();
-}
-// Actualizar UI de cada tasa con indicadores de cambio
-function updateRateUI(type, value, monitorData) {
-  
-  const rateElement = elements.tasas[type];
-  const change = monitorData.change || 0;
-  const symbol = monitorData.symbol || '<=>';
-  
-  rateElement.textContent = value.toFixed(2);
-  if(rateElement.parentElement){
-    rateElement.parentElement.innerHTML = `
-      ${type} <span class="tasa" > (${value.toFixed(2)})</span>
-      <span style="color:${monitorData.color};" >
-        ${symbol} ${change} 
-      </span>
-    `;
-  }
-  
-}
+   }
+   const calculateRates = (resultInput:HTMLInputElement | null):void=>{
+     // 1. Calcular tasa promedio
+    state.tasas.promedio.price = parseFloat(
+        ((state.tasas.bcv.price + state.tasas.paralelo.price) / 2).toFixed(2)
+    );
 
-// Manejar cambio de moneda
-function handleCurrencyChange(currency) {
-  state.selectedCurrency = currency;
-  updateCurrencyUI();
-  calculateRates();
-}
+    // 2. Obtener tasa actual segura
+    const currentRate = state.tasas[state.currentTasa as keyof typeof state.tasas]?.price || 1;
+    
+    // 3. Determinar dirección de conversión
+    const isConvertingToUSD = resultInput !== null;
+    
+    if (isConvertingToUSD) {
+        // Caso BS → USD (cuando se escribe en bsInput)
+        if (dom.bsInput) {
+            const montoBS = parseFloat(dom.bsInput.value) || 0;
+            const resultUSD = montoBS / currentRate;
+            resultInput.value = resultUSD.toFixed(2);
+        }
+    } else {
+        // Caso USD → BS (cuando se escribe en usdInput)
+        if (dom.usdInput) {
+            const montoUSD = parseFloat(dom.usdInput.value) || 0;
+            const resultBS = montoUSD * currentRate;
+            if (dom.bsInput) {
+                dom.bsInput.value = resultBS.toFixed(2);
+            }
+        }
+    }
 
-// Alternar moneda
-function toggleCurrency() {
-  const newCurrency = this.dataset.to;
-  document.querySelector(`input[name="currency"][value="${newCurrency}"]`).checked = true;
-  handleCurrencyChange(newCurrency);
-}
+    updateUI();
+   }
 
-// Actualizar UI de moneda
-function updateCurrencyUI() {
-  const isUSD = state.selectedCurrency === 'usd';
-  
-  elements.typeConversionInfo.textContent = isUSD 
-    ? "Dólares a Bolívares" 
-    : "Bolívares a Dólares";
-  
-  elements.btnToggleCurrency.textContent = isUSD ? "USD" : "VES";
-  elements.btnToggleCurrency.dataset.to = isUSD ? "ves" : "usd";
-}
+   const updateUI = ()=>{
+        dom.bcvCard.textContent = state.tasas.bcv.price+ " Bs/$"
+        dom.promedioCard.textContent = state.tasas.promedio.price+ " Bs/$"
+        dom.paraleloCard.textContent = state.tasas.paralelo.price+ " Bs/$"
+   }
 
-// Calcular tasas con debounce
-const calculateRates = debounce(function(e:HTMLElement) {
-  
-  let result, amount;
-
-  if(e instanceof Element || e instanceof HTMLElement){
-    state.selectedRate = e.getAttribute("data-text")
-  }
-  amount = parseFloat(elements.amountInput.value) || 0;
-  
-  if (state.selectedCurrency === 'usd') {
-    result = amount * state.rates[state.selectedRate];
-  } else {
-    result = amount / state.rates[state.selectedRate];
-  }
-  result = formatCurrency(result);
-  elements.resultValue.textContent = `
-   ${amount} ${state.selectedCurrency} = ${result} ${state.selectedCurrency == 'usd'? "ves" : "usd"}
-  `;
-  elements.lastUpdate.textContent = `Actualizado usando tasa ${state.selectedRate}: ${state.lastUpdate}`;
-  modifyClass(state.selectedRate)
-  
-}, 300);
-
-//Funcion para añadir manejar clases de los <li> en .rowTasas
-  function modifyClass(selectedRate) {
-    // Remover clase activa de todos los <li>
-      
-      for(let i = 0; i<elements.containerTasas.length;i++){
-        elements.containerTasas[i].classList.remove('active-rate');
-      }
-    // Añadir clase al <li> seleccionado en state
-    const targetLi = document.querySelector(`.rowTasas li[data-text="${selectedRate}"]`);
-    targetLi.classList.add('active-rate')
-
-  }
-// Formatear moneda
-function formatCurrency(value) {
-  return value.toLocaleString('es-VE', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
-
-// Función debounce
-function debounce(func, delay) {
-  let timeoutId;
-  return function(...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func.apply(this, args), delay);
-  };
-}
-
-// Mostrar errores
-function showError(message) {
-  const errorElement = document.createElement('div');
-  errorElement.className = 'error-message';
-  errorElement.textContent = message;
-  
-  const existingError = document.querySelector('.error-message');
-  if (existingError) existingError.remove();
-  
-  document.querySelector('.calcApp')?.appendChild(errorElement);
-  setTimeout(() => errorElement.remove(), 5000);
-}
 </script>
+
+<style is:inline >
+    #calApp,#access-group{
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+    }
+    #access-group{
+        margin-top: 12px;
+        justify-content: space-around;
+    }
+    #bs,#usd{
+        padding-left: 32px;
+        width: 100%;
+        position: relative;
+        font-size: 100%;
+    }
+    #access-group{
+        button{
+            background-color: var(--bg-cards);
+            border-radius: var(--rounded);
+            padding: 7px 15px;
+            transition: background-color .7s ease-in-out;
+        }
+    }
+    #access-group button:before{
+        content: "$";
+        margin-right: 5px;
+    }
+    #access-group button:hover{
+        background-color: var(--color-borders);
+    }
+    #containerInputs .inputGroup{position: relative; margin: 5px 0;}
+    #containerInputs label{
+        position: absolute;
+        z-index: 2;
+        opacity: .8;
+        top:11px;
+        left: 11px;
+        font-size: 100%;
+        font-weight: 450;
+    }
+    #containerInputs p{
+        font-weight: 500;
+    }
+    /*/////////css de arriba//////////*/
+    #containerInputs,#contenedorTasas{
+        margin-bottom: 1.5rem;
+        padding: 5px;
+        width: 100%;
+    }
+    #contenedorTasas {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    #contenedorTasas {
+      grid-template-columns: repeat(3, 1fr);
+      order:1;
+    }
+    #containerInputs{
+        order: 2;
+        width: 49%;
+    }
+    #conversion-result{
+        order: 3;
+        width: 49%;
+    }
+  }
+
+  
+
+</style>

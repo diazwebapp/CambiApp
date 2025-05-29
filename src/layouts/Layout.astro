@@ -60,12 +60,12 @@ const { title = "CambiApp", menu=false } = Astro.props;
 <style is:global>
   :root {
     --bg-app: rgb(240, 240, 240);
-    --color-borders: rgb(210, 210, 210);
+    --color-borders: rgb(180, 180, 180);
     --font-color: rgb(28, 28, 28);
     --bg-cards:rgb(235, 235, 235);
     --primary: rgb(3 105 161);
     --secondary: rgb(70, 69, 69);
-    --success: hsl(123, 91%, 46%);
+    --success: hsl(123, 84%, 34%);
     --danger: rgb(224, 43, 11);
     --rounded:.37rem;
   }
@@ -73,20 +73,14 @@ const { title = "CambiApp", menu=false } = Astro.props;
     --bg-app: rgb(0, 0, 0);
     --font-color: rgb(255, 255, 255);
     --bg-cards:rgb(30, 30, 30);
+    --color-borders: rgb(150, 150, 150);
   }
   *,*::before,*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family:
-      ui-sans-serif,
-      system-ui,
-      sans-serif,
-      "Apple Color Emoji",
-      "Segoe UI Emoji",
-      Segoe UI Symbol,
-      "Noto Color Emoji";
-    -webkit-font-smoothing: antialiased;
+      'Inter', sans-serif;
     color: var(--font-color);
     font-size: 1.1rem;
   }
@@ -101,13 +95,23 @@ const { title = "CambiApp", menu=false } = Astro.props;
     display: inline;
   }
   input,button, option, select {
-    box-shadow: 0 0 2px 0 var(--color-borders) ;
+    box-shadow: 0px 0px 2px var(--color-borders) ;
     background-color: var(--bg-app);
     padding: 10px;
     outline: none;
     border: none;
     border-radius: var(--rounded);
   }
+  input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
   select{
     width: 100%;
     position: relative;

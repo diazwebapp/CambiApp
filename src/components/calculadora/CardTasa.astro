@@ -29,10 +29,7 @@
     
     const botones = document.getElementsByClassName("use-rate-button")
     if(botones && botones.length > 0){
-      const t1 = performance.now()
-          test(botones)
-          const t2 = performance.now()
-          console.log((t2-t1).toFixed(3)+"ms")
+        test(botones)
     }
   })
 
@@ -50,11 +47,9 @@
             boton.classList.add("primary-button");
             boton.classList.remove("secondary-button");
             if(window.SharedWorker){
-
-              
               // Enviar un mensaje al window.sharedWorker
               window.sharedWorker.port.postMessage({
-                tasa: boton.getAttribute("data-tasa")
+                setTasa: boton.getAttribute("data-tasa")
               });
 
             }

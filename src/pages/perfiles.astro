@@ -1,0 +1,346 @@
+---
+import Layout from "../layouts/Layout.astro"
+---
+<Layout title="Perfiles" >
+   <div class="form-container">
+        <b>Agregar nuevo perfil</b>
+        <form id="profileForm">
+            <div class="form-row">
+                <label for="name">Nombre completo</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-row">
+                <label for="bank">Banco</label>
+                <select id="bank" required>
+                <option value="" disabled selected>Seleccione un banco</option>
+                <option value="0102 - BANCO DE VENEZUELA"
+                    >0102 - BANCO DE VENEZUELA</option
+                >
+                <option value="0104 - BANCO VENEZOLANO DE CREDITO"
+                    >0104 - BANCO VENEZOLANO DE CREDITO</option
+                >
+                <option value="0105 - BANCO MERCANTIL"
+                    >0105 - BANCO MERCANTIL</option
+                >
+                <option value="0108 - BBVA PROVINCIAL"
+                    >0108 - BBVA PROVINCIAL</option
+                >
+                <option value="0114 - BANCARIBE">0114 - BANCARIBE</option>
+                <option value="0115 - BANCO EXTERIOR"
+                    >0115 - BANCO EXTERIOR</option
+                >
+                <option value="0128 - BANCO CARONI">0128 - BANCO CARONI</option>
+                <option value="0134 - BANESCO">0134 - BANESCO</option>
+                <option value="0137 - BANCO SOFITASA"
+                    >0137 - BANCO SOFITASA</option
+                >
+                <option value="0138 - BANCO PLAZA">0138 - BANCO PLAZA</option>
+                <option value="0146 - BANGENTE">0146 - BANGENTE</option>
+                <option value="0151 - BANCO FONDO COMUN"
+                    >0151 - BANCO FONDO COMUN</option
+                >
+                <option value="0156 - 100% BANCO">0156 - 100% BANCO</option>
+                <option value="0157 - DELSUR BANCO UNIVERSAL"
+                    >0157 - DELSUR BANCO UNIVERSAL</option
+                >
+                <option value="0163 - BANCO DEL TESORO"
+                    >0163 - BANCO DEL TESORO</option
+                >
+                <option value="0166 - BANCO AGRICOLA DE VENEZUELA"
+                    >0166 - BANCO AGRICOLA DE VENEZUELA</option
+                >
+                <option value="0168 - BANCRECER">0168 - BANCRECER</option>
+                <option value="0171 - BANCO ACTIVO">0171 - BANCO ACTIVO</option>
+                <option value="0172 - BANCAMIGA BANCO UNIVERSAL, C.A."
+                    >0172 - BANCAMIGA BANCO UNIVERSAL, C.A.</option
+                >
+                <option value="0173 - BANCO INTERNACIONAL DE DESARROLLO"
+                    >0173 - BANCO INTERNACIONAL DE DESARROLLO</option
+                >
+                <option value="0174 - BANPLUS">0174 - BANPLUS</option>
+                <option
+                    value="0175 - BANCO DIGITAL DE LOS TRABAJADORES, BANCO UNIVERSAL"
+                    >0175 - BANCO DIGITAL DE LOS TRABAJADORES, BANCO UNIVERSAL</option
+                >
+                <option value="0177 - BANFANB">0177 - BANFANB</option>
+                <option value="0191 - BANCO NACIONAL DE CREDITO"
+                    >0191 - BANCO NACIONAL DE CREDITO</option
+                >
+                <option value="0601 - INSTITUTO MUNICIPAL DE CREDITO POPULAR"
+                    >0601 - INSTITUTO MUNICIPAL DE CREDITO POPULAR</option
+                >
+            </select>
+            </div>
+            <div class="form-row">
+                <label for="accountNumber">Número de cuenta</label>
+                <input type="text" id="accountNumber" required>
+            </div>
+            <div class="form-row">
+                <label for="phone">Teléfono</label>
+                <input type="text" id="phone" required>
+            </div>
+            <div class="form-row">
+                <label for="idNumber">Cédula/RIF</label>
+                <input type="text" id="idNumber" required>
+            </div>
+            <div class="form-row">
+                <label>Moneda</label>
+                <div class="currency-options">
+                    <div class="currency-option">
+                        <input type="radio" id="currencyBs" name="currency" value="Bs" checked>
+                        <label for="currencyBs">Bolívares</label>
+                    </div>
+                    <div class="currency-option">
+                        <input type="radio" id="currencyUsd" name="currency" value="$">
+                        <label for="currencyUsd">Dólares</label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit">Guardar perfil</button>
+        </form>
+    </div>
+
+    <div class="profile-list">
+        <h2>Perfiles guardados</h2>
+        <div id="profilesContainer"></div>
+    </div>
+
+</Layout>
+    <style is:inline >
+        
+        .form-container {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px var(--color-borders);
+            
+        }
+        #profileForm{
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        #profileForm  *{
+            font-size: 16px;
+        }
+        
+        .form-row {
+            width: 49%;
+            margin: 12px 0;
+            input{
+                margin-top: 5px;
+                width: 100%;
+            }
+            label{
+                display: block;
+                //text-shadow: 0px 0px 1px var(--color-borders);
+            }
+        }
+        .form-row:nth-child(6){
+            width: 100% !important;
+        }
+        .currency-options{margin-top: 12px;}
+        .currency-options,.currency-option {
+            display: flex;
+        }
+        
+        .currency-option input + label, #profileForm button{
+            border-radius: var(--rounded);
+            padding: 12px;
+            cursor: pointer;
+        }
+        .currency-option input:checked + label, #profileForm button{
+            background-color: var(--primary);
+            color: white;
+        }
+        .currency-option:first-child input:checked + label{
+            border-radius: var(--rounded) 0 0 var(--rounded);
+        }
+        .currency-option:last-child input:checked + label{
+            border-radius: 0 var(--rounded) var(--rounded) 0;
+        }
+       .currency-option input{
+        display: none;
+       }
+        
+        .profile-list {
+            padding: 20px;
+            border-radius: var(--rounded);
+            box-shadow: 0 1px 2px var(--color-borders);
+        }
+        .profile-list h2{
+            margin: 12px 0;
+        }
+        .profile-card {
+            box-shadow: 0 0px 2px var(--color-borders);
+            border-radius: var(--rounded);
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .profile-card p{
+            font-size: 16px;
+            opacity: .8;
+        }
+        .profile-card b{
+            margin: 5px 0;
+            font-weight: 400;
+            display: block;
+        }
+        .profile-card.selected {
+            box-shadow: 0 0px 2px var(--success);
+        }
+        
+        
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .profile-actions button {
+            padding: 5px 10px;
+            opacity: .8;
+        }
+        .edit-btn {
+            color: var(--primary);
+        }
+        
+        .delete-btn {
+            color: var(--danger);
+        }
+        
+        .edit-btn:hover,.delete-btn:hover,.copy-btn:hover {
+            opacity: 1;
+        }
+        
+    </style>
+
+
+ 
+
+
+
+    <script is:inline >
+        // Clave para localStorage
+        const STORAGE_KEY = 'paymentProfiles';
+        
+        // Cargar perfiles al iniciar
+        document.addEventListener('astro:page-load', loadProfiles);
+        
+        // Manejar el envío del formulario
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const bank = document.getElementById('bank').value;
+            const accountNumber = document.getElementById('accountNumber').value;
+            const phone = document.getElementById('phone').value;
+            const idNumber = document.getElementById('idNumber').value;
+            const currency = document.querySelector('input[name="currency"]:checked').value;
+            
+            const newProfile = {
+                id: Date.now().toString(),
+                name,
+                bank,
+                accountNumber,
+                phone,
+                idNumber,
+                currency,
+                selected: "no"
+            };
+            
+            saveProfile(newProfile);
+            this.reset();
+        });
+        
+        // Guardar perfil en localStorage
+        function saveProfile(profile) {
+            let profiles = getProfiles();
+            profiles.push(profile);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+            loadProfiles();
+        }
+        
+        // Obtener todos los perfiles
+        function getProfiles() {
+            const profiles = localStorage.getItem(STORAGE_KEY);
+            return profiles ? JSON.parse(profiles) : [];
+        }
+        
+        // Cargar y mostrar perfiles
+        function loadProfiles() {
+            const profiles = getProfiles();
+            const container = document.getElementById('profilesContainer');
+            container.innerHTML = '';
+            
+            if (profiles.length === 0) {
+                container.innerHTML = '<p>No hay perfiles guardados.</p>';
+                return;
+            }
+            
+            profiles.forEach(profile => {
+                const profileCard = document.createElement('div');
+                profileCard.className = `profile-card ${profile.selected === "si" ? 'selected' : ''}`;
+                
+                profileCard.innerHTML = `
+                    <b>${profile.name}</b>
+                    <p>Banco: ${profile.bank}</p>
+                    <p>Cuenta: ${profile.accountNumber}</p>
+                    <p>Teléfono: ${profile.phone}</p>
+                    <p>Cédula/RIF: ${profile.idNumber}</p>
+                    <p>Moneda: ${profile.currency}</p>
+                    <div class="profile-actions">
+                        <button class="copy-btn" onclick="copyProfile('${profile.id}')">Copiar</button>
+                        <button class="edit-btn" onclick="selectProfile('${profile.id}')">${profile.selected === "si" ? 'Seleccionado' : 'Seleccionar'}</button>
+                        <button class="delete-btn" onclick="deleteProfile('${profile.id}')">Eliminar</button>
+                    </div>
+                `;
+                
+                container.appendChild(profileCard);
+            });
+        }
+        
+        // Seleccionar un perfil (marcar como seleccionado)
+        function selectProfile(id) {
+            let profiles = getProfiles();
+            profiles = profiles.map(profile => {
+                return {
+                    ...profile,
+                    selected: profile.id === id ? "si" : "no"
+                };
+            });
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+            loadProfiles();
+        }
+        
+        // Copiar un perfil
+        function copyProfile(id) {
+            const profiles = getProfiles();
+            const profileToCopy = profiles.find(p => p.id === id);
+            
+            if (profileToCopy) {
+                document.getElementById('name').value = profileToCopy.name;
+                document.getElementById('bank').value = profileToCopy.bank;
+                document.getElementById('accountNumber').value = profileToCopy.accountNumber;
+                document.getElementById('phone').value = profileToCopy.phone;
+                document.getElementById('idNumber').value = profileToCopy.idNumber;
+                
+                if (profileToCopy.currency === '$') {
+                    document.getElementById('currencyUsd').checked = true;
+                } else {
+                    document.getElementById('currencyBs').checked = true;
+                }
+            }
+        }
+        
+        // Eliminar un perfil
+        function deleteProfile(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar este perfil?')) {
+                let profiles = getProfiles();
+                profiles = profiles.filter(profile => profile.id !== id);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+                loadProfiles();
+            }
+        }
+    </script>
