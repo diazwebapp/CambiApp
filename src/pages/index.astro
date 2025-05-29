@@ -174,14 +174,14 @@ const cards = [
         const {rates} = event.data.response
         if(rates){
             const {paralelo,bcv} = rates
-            let promedio = parseFloat((paralelo + bcv) / 2).toFixed(2)
+            const promedio = parseFloat((paralelo + bcv) / 2).toFixed(2)
             
               const bcvElement = document.getElementById("bcv")
               const paraleloElement = document.getElementById("paralelo")
                const promedioElement = document.getElementById("promedio")
-              if(bcvElement) bcvElement.textContent = bcv
-              if(paraleloElement) paraleloElement.textContent = paralelo
-              if(promedioElement) promedioElement.textContent = promedio
+              if(bcvElement) bcvElement.textContent = bcv+" Bs/$"
+              if(paraleloElement) paraleloElement.textContent = paralelo+" Bs/$"
+              if(promedioElement) promedioElement.textContent = promedio+" Bs/$"
             
         }
       };
