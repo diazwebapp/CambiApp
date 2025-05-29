@@ -37,7 +37,7 @@ const cards = [
 
 <Layout title="CambiApp">
   <div class="container">
-    <h2 class="welcome-title">Bienvenido a CambiApp</h2>
+    <h1 class="welcome-title">Bienvenido a CambiApp</h1>
     
     <div class="cards-grid">
       {cards.map(card => (
@@ -63,18 +63,11 @@ const cards = [
   </div>
 </Layout>
 
-<style>
+<style is:inline>
   .container {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
-  }
-
-  .welcome-title {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2rem;
-    
   }
 
   .cards-grid {
