@@ -216,10 +216,6 @@ import Layout from "../layouts/Layout.astro"
     </style>
 
 
- 
-
-
-
     <script is:inline >
         // Clave para localStorage
         const STORAGE_KEY = 'paymentProfiles';
@@ -315,24 +311,39 @@ import Layout from "../layouts/Layout.astro"
         }
         
         // Copiar un perfil
-        function copyProfile(id) {
-            const profiles = getProfiles();
-            const profileToCopy = profiles.find(p => p.id === id);
-            
-            if (profileToCopy) {
-                document.getElementById('name').value = profileToCopy.name;
-                document.getElementById('bank').value = profileToCopy.bank;
-                document.getElementById('accountNumber').value = profileToCopy.accountNumber;
-                document.getElementById('phone').value = profileToCopy.phone;
-                document.getElementById('idNumber').value = profileToCopy.idNumber;
-                
-                if (profileToCopy.currency === '$') {
-                    document.getElementById('currencyUsd').checked = true;
-                } else {
-                    document.getElementById('currencyBs').checked = true;
-                }
-            }
-        }
+       function copyProfile(id) {
+    const profiles = getProfiles();
+    const profileToCopy = profiles.find(p => p.id === id);
+    
+    if (profileToCopy) {
+        // Formatear los datos del perfil para copiar
+        const profileText = `
+Nombre: ${profileToCopy.name}
+Banco: ${profileToCopy.bank}
+Número de cuenta: ${profileToCopy.accountNumber}
+Teléfono: ${profileToCopy.phone}
+Cédula/RIF: ${profileToCopy.idNumber}
+Moneda: ${profileToCopy.currency}
+        `.trim();
+        
+        // Usar la API del portapapeles del navegador
+        navigator.clipboard.writeText(profileText)
+            .then(() => {
+                alert('Perfil copiado al portapapeles');
+            })
+            .catch(err => {
+                console.error('Error al copiar al portapapeles:', err);
+                // Fallback para navegadores más antiguos
+                const textarea = document.createElement('textarea');
+                textarea.value = profileText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Perfil copiado al portapapeles (método alternativo)');
+            });
+    }
+}
         
         // Eliminar un perfil
         function deleteProfile(id) {
