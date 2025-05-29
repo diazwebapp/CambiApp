@@ -12,7 +12,7 @@ const cards = [
     icon: "📈",
     title: "Histórico",
     description: "Ver tendencias de tasas de cambio",
-    href: "/historico"
+    href: "/historal"
   },
   {
     icon: "👤",
@@ -54,9 +54,9 @@ const cards = [
     <div class="rates-info">
       <h3>Tasas del día</h3>
       <div class="rates">
-        <p><strong>Oficial:</strong> 35.25 Bs/$</p>
-        <p><strong>Paralelo:</strong> 37.80 Bs/$</p>
-        <p><strong>Promedio:</strong> 36.52 Bs/$</p>
+        <strong>Oficial:</strong> <p id="bcv" style="line-height:1.2 !important;">35.25 Bs/$</p>
+        <strong>Paralelo:</strong> <p id="paralelo" style="line-height:1.2 !important;">37.80 Bs/$</p>
+        <strong>Promedio:</strong> <p id="promedio" style="line-height:1.2 !important;">36.52 Bs/$</p>
       </div>
       <p class="update-time">Última actualización: 20/05/2023 - 10:00 AM</p>
     </div>
@@ -135,7 +135,7 @@ const cards = [
 
   .rates {
     display: flex;
-    flex-flow: roe nowrap;
+    flex-flow: row nowrap;
     gap: 1rem;
     margin-bottom: 1rem;
   }
@@ -165,3 +165,27 @@ const cards = [
     }
   }
 </style>
+
+<script>
+  document.addEventListener("astro:page-load",()=>{
+    if(window.SharedWorker){
+              
+      window.sharedWorker.port.onmessage = (event) => {
+        const {rates} = event.data.response
+        if(rates){
+            const {paralelo,bcv} = rates
+            let promedio = parseFloat((paralelo + bcv) / 2).toFixed(2)
+            
+              const bcvElement = document.getElementById("bcv")
+              const paraleloElement = document.getElementById("paralelo")
+               const promedioElement = document.getElementById("promedio")
+              if(bcvElement) bcvElement.textContent = bcv
+              if(paraleloElement) paraleloElement.textContent = paralelo
+              if(promedioElement) promedioElement.textContent = promedio
+            
+        }
+      };
+      
+    }
+  })
+</script>
