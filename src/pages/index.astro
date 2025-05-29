@@ -74,7 +74,7 @@ const cards = [
     text-align: center;
     margin-bottom: 2rem;
     font-size: 2rem;
-    color: var(--font-color);
+    
   }
 
   .cards-grid {
@@ -97,23 +97,27 @@ const cards = [
 
   .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px var(--color-borders);
   }
 
   .card-icon {
-    font-size: 2rem;
+    font-size: 1.3rem;
+    width: 60px;height: 60px; border-radius: 99999px;
+    background-color: var(--primary);
+    text-align: center;
+    padding-top: .7rem;
   }
 
   .card-content h3 {
     margin: 0;
     font-size: 1.25rem;
-    color: var(--font-color);
+    
   }
 
   .card-content p {
     margin: 0.5rem 0 0;
     font-size: 0.9rem;
-    color: var(--secondary);
+    opacity: .7;
   }
 
   .rates-info {
@@ -125,23 +129,25 @@ const cards = [
 
   .rates-info h3 {
     margin: 0 0 1rem;
-    color: var(--font-color);
+    color: var(--primary);
+    
   }
 
   .rates {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
+    flex-flow: roe nowrap;
     gap: 1rem;
     margin-bottom: 1rem;
   }
 
-  .rates p {
+  .rates p, .rates strong {
     margin: 0;
+    font-size: .8rem;
   }
 
   .update-time {
     font-size: 0.9rem;
-    color: var(--secondary);
+    opacity: .7;
     margin: 0;
   }
 
